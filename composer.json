@@ -1,0 +1,31 @@
+{
+    "name": "leazycms/earsip",
+    "description": "Extensi LeazyCMS untuk EArsip",
+    "type": "library",
+    "license": "MIT",
+    "keywords": ["PHP"],
+    "autoload": {
+        "psr-4": {
+            "Leazycms\\EArsip\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Nurul Hudin",
+            "email": "m.nurul.hudin@gmail.com"
+        }
+    ],
+    "extra": {
+
+        "laravel": {
+            "providers": [
+                "Leazycms\\Domain\\EArsipServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "stable",
+    "require": {
+
+    }
+
+}
