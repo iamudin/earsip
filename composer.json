@@ -19,7 +19,7 @@
 
         "laravel": {
             "providers": [
-                "Leazycms\\Domain\\EArsipServiceProvider"
+                "Leazycms\\EArsip\\EArsipServiceProvider"
             ]
         }
     },
