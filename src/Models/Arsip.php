@@ -26,7 +26,10 @@ class Arsip extends Model
         'user_id'
         ];
         protected $casts = [
-            'harapan' => 'array'
+            'harapan' => 'array',
+            'diteruskan_ke_kadis' => 'datetime',
+            'paraf_kasubagumum_pada' => 'datetime',
+
         ];
     public function user(){
         return $this->belongsTo(User::class);

@@ -38,6 +38,14 @@ class SuratMasukController extends Controller  implements HasMiddleware
             return back()->with('success', 'Surat berhasil di paraf dan diteruskan ke Kepala Dinas');
         }
 
+        if($request->respon_disposisi){
+            $arsip->disposisis()->whereBelongsTo(earsip_user()->pejabat)->update([
+                'catatan'=>$request->catatan,
+                'dibalas_pada'=>now(),
+            ]);
+            return back()->with('success', 'Balasan dikirim');
+
+        }
         if ($request->kadis_meneruskan) {
             $request->validate([
                 'pejabat_id' => 'array|required',
@@ -153,7 +161,6 @@ class SuratMasukController extends Controller  implements HasMiddleware
         }
         return DataTables::of($data)
             ->addIndexColumn()
-            ->filter(function ($instance) use ($request) {})
             ->addColumn('status', function ($row) {
                 return 'status';
             })

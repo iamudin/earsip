@@ -118,7 +118,30 @@
                             <p class="card-text mb-1">Kadis sudah mendisposisikan surat ke :
                             <ul>
                             @foreach($data->disposisis as $row)
-                                <li>{{ $row->pejabat->jabatan }} {!! $row->dibaca !!}</li>
+                                <li>
+                                  <strong>{{ $row->pejabat->jabatan }}</strong>
+                                  @if(earsip_user()->pejabat->id == $row->pejabat->id)
+                                  @if($row->belum_dibalas())<br>
+                                <code>Belum ada balasan</code>
+                                    <br>
+                                <div class="balas" style="display: none">
+                                <textarea placeholder="Tulis catatan disini" name="catatan" class="form-control form-control-sm"></textarea>
+                                <button name="respon_disposisi" value="true" class="btn btn-sm btn-primary mt-2"><i class="fa fa-reply"></i> Kirim Catatan</button>
+                                </div>
+                                  <span onclick="$('.balas').show();$(this).hide()" class="mt-2 btn btn-sm btn-outline-primary"> <i class="fa fa-pencil"></i> Tulis Catatan</span>
+                                  @else
+                                        <p class="text-muted"><i class="fa fa-reply"></i> {{ $row->catatan }} <br><small><i class="fa fa-clock-o "></i> {{ $row->dibalas_pada->diffForhumans() }}</small></p>
+                                  @endif
+                                  @else
+                                  @if(!$row->belum_dibalas())
+                                    <p class="text-muted"><i class="fa fa-comment"></i> {{ $data->catatan }} <br><small><i class="fa fa-clock-o "></i> {{ $row->dibalas_pada->diffForhumans() }}</small></p>
+                                @else
+                                <br>
+                                <code>Belum ada balasan</code>
+                                @endif
+                                @endif
+
+                                </li>
                             @endforeach
                             </ul>
                             </p>
@@ -134,7 +157,7 @@
                            <li>{{ $data->catatan ?? '-' }}</li>
                             </ul>
                             </p>
-                            <small class="time">{{ $data->paraf_kasubagumum_pada}}</small>
+                            <small class="time">{{ $data->diteruskan_ke_kadis->diffForhumans() }}</small>
                             @else
 
                             @if(earsip_user()->is_kadis())
@@ -186,7 +209,7 @@
                             @if($data->sudah_paraf())
                                  <h6 class="card-title">Paraf Kasubag Umum</h6>
                             <p class="card-text mb-1">Kasubag memeriksa dan memberikan paraf persetujuan disposisi.</p>
-                            <small class="time">{{ $data->paraf_kasubagumum_pada}}</small>
+                            <small class="time">{{ $data->paraf_kasubagumum_pada->diffForhumans()}}</small>
                             @else
                             @if(earsip_user()->is_kasubag())
 
@@ -216,7 +239,7 @@
                       <div class="card-body">
                         <h6 class="card-title">Surat Diterima & Diinput</h6>
                         <p class="card-text mb-1">Operator menginput surat ke sistem.</p>
-                        <small class="time">2025-05-30 08:30</small>
+                        <small class="time">{{ $data->created_at->diffForhumans() }}</small>
                       </div>
                     </div>
                   </li>

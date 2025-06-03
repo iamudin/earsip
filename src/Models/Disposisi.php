@@ -15,7 +15,13 @@ class Disposisi extends Model
         'arsip_id',
         'dibaca_pada',
         'diarsip_pada',
+        'dibalas_pada',
+        'catatan',
         'teruskan_ke_whatsapp_pada'
+        ];
+            protected $casts = [
+            'dibalas_pada' => 'datetime',
+            'dibaca_pada' => 'datetime',
         ];
     public function pejabat(){
         return $this->belongsTo(Pejabat::class);
@@ -26,6 +32,9 @@ class Disposisi extends Model
       public function getDibacaAttribute($key)
       {
         return $this->dibaca_pada != null ? '<code>( dilihat pada '.$this->dibaca_pada.' <i class="fa fa-check text-success"></i>)</code>': null;
+    }
+    public function belum_dibalas(){
+        return $this->dibalas_pada == null;
     }
       public function user(){
         return $this->belongsTo(User::class);

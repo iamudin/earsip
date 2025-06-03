@@ -19,6 +19,8 @@ return new class extends Migration
             $table->foreignUuid('pejabat_id')->constrained('pejabats')->cascadeOnDelete();
             $table->foreignUuid('arsip_id')->constrained('arsips')->cascadeOnDelete();
             $table->dateTime('dibaca_pada')->nullable();
+            $table->string('catatan')->nullable();
+            $table->dateTime('dibalas_pada')->nullable();
             $table->dateTime('diarsip_pada')->nullable();
             $table->dateTime('teruskan_ke_whatsapp_pada')->nullable();
             $table->timestamps();
