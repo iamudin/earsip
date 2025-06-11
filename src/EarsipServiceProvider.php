@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Leazycms\EArsip\Middleware\EArsipMiddleware;
 
-class EArsipServiceProvider extends ServiceProvider
+class EarsipServiceProvider extends ServiceProvider
 {
     protected function registerRoutes()
     {
