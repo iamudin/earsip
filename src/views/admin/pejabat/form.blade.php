@@ -20,11 +20,24 @@
         <small for="">Nohp ( WA Aktif)</small>
         <input  type="text" class="form-control form-control-sm " value="{{ $data->nohp ?? null }}"  name="nohp">
         <small for="">Peran</small><br>
-       @foreach(['OPERATOR','KASUBAGUMUM','KADIS','SEKRETARIS','KABID'] as $row)
+       @foreach(['OPERATOR','KASUBAGUMUM','KADIS','SEKRETARIS','KABID','STAFF'] as $row)
         <input  type="radio" value="{{ $row }}"  name="alias_jabatan" {{ $data && $data->alias_jabatan == $row ? 'checked' : '' }}> {{ $row }} <br>
        @endforeach
-        <br>
-        <h4>Akun</h4>
+         <input  type="checkbox" value="1"  name="penerima_disposisi" {{ $data && $data->penerima_disposisi == '1' ? 'checked' : '' }}> Pejabat ini dapat menerima disposisi Kepala Dinas 
+         <br>
+         @if(!$data || $data && !$data->penerima_disposisi)
+         <br>
+        <small for="">Atasan</small>
+
+         <select name="atasan_id" id="" class="form-control">
+            <option value="">Pilih Atasan</option>
+            @foreach($penerima_disposisi as $row)
+            <option value="{{ $row->id }}" {{ $data && $data->atasan_id == $row->id ? 'selected' : '' }}>{{ $row->nama }} ({{ $row->alias_jabatan }})</option>
+            @endforeach
+         </select>
+         @endif
+         <br>
+        <h4>Akun <sup>{!! help('Abaikan jika pejabat tidak butuh login ke Sistem') !!}</sup></h4>
         <small for="">Email</small>
         <input  type="text" class="form-control form-control-sm " value="{{ $data?->user->email ?? null }}"  name="email">
         <small for="">Username</small>

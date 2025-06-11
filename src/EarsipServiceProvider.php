@@ -1,5 +1,7 @@
 <?php
 namespace Leazycms\EArsip;
+
+use App\Jobs\WaSender;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
@@ -40,11 +42,13 @@ class EArsipServiceProvider extends ServiceProvider
         $this->registerMigrations();
         $this->add_extension();
         $this->registerRoutes();
+
     }
     public function register()
     {
         $this->mergeConfigFrom(__DIR__ . "/config/config.php", "earsip");
         $this->registerFunctions();
+
 
     }
      protected function registerFunctions()

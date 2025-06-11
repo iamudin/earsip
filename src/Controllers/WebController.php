@@ -6,6 +6,6 @@ use App\Http\Controllers\Controller;
 class WebController extends Controller
 {
 public function home(Request $request){
-    // return view('earsip.home');
+    return to_route('login');
 }
 }

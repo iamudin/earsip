@@ -23,7 +23,7 @@ class PejabatController extends Controller  implements HasMiddleware
     public function update(Request $request,Pejabat $pejabat)
     {
         abort_if(!auth()->user()->isAdmin(), 403);
-        $pejabat->update($request->all());
+        $pejabat->update(array_merge($request->all(),['penerima_disposisi'=>$request->penerima_disposisi ?? 0]));
         $pejabat->user()->update([
             'username'=>$request->username,
             'password'=>$request->password ? bcrypt($request->password) : $pejabat->user->password,
@@ -37,7 +37,10 @@ class PejabatController extends Controller  implements HasMiddleware
     public function edit(Pejabat $pejabat)
     {
         abort_if(!auth()->user()->isAdmin(), 403);
-        return view('earsip::admin.pejabat.form', ['data' => $pejabat->load('user')]);
+        
+        return view('earsip::admin.pejabat.form', ['data' => $pejabat->load('user'),
+            'penerima_disposisi' => Pejabat::wherePenerimaDisposisi(1)->whereNotIn('id',[$pejabat->id])->get(),
+        ]);
     }
     public function store(Request $request)
     {
@@ -51,13 +54,18 @@ class PejabatController extends Controller  implements HasMiddleware
             'level'=> 'earsip',
             'slug'=> str($request->nama)->slug(),
         ]);
-        $create = $user->pejabat()->create($request->all());
+        $create = $user->pejabat()->create(array_merge($request->all(),['penerima_disposisi'=>$request->penerima_disposisi ?? 0]));
         return redirect(earsip_route('pejabat.edit',$create->id))->with('success','Berhasil ditambah');;
     }
     public function create()
     {
         abort_if(!auth()->user()->isAdmin(), 403);
-        return view('earsip::admin.pejabat.form', ['data' => null]);
+        return view('earsip::admin.pejabat.form', 
+        [
+            'data' => null,
+            'penerima_disposisi' => Pejabat::wherePenerimaDisposisi(1)->get(),
+            ]
+    );
     }
     public function index()
     {
@@ -83,7 +91,7 @@ class PejabatController extends Controller  implements HasMiddleware
             })
             ->addColumn('status', function ($row) {
                 $status = '<span class="badge badge-'.($row->user->isActive() ? 'success' : 'danger').'"> ACCOUNT IS '.str($row->user->status)->upper().'</span><br>';
-                $status .= '<code>Last Login: '.$row->user->last_login_at.'</code><br>';
+                $status .= '<code>Terakhir Login: '.$row->user->last_login_at?->diffForhumans().'</code><br>';
                 $status .= '<code>IP : '.$row->user->last_login_ip.'</code>';
                 return $status;
             })

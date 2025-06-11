@@ -17,17 +17,23 @@ class Disposisi extends Model
         'diarsip_pada',
         'dibalas_pada',
         'catatan',
+        'balasan',
+        'whatsapp_pejabat',
         'teruskan_ke_whatsapp_pada'
         ];
             protected $casts = [
             'dibalas_pada' => 'datetime',
-            'dibaca_pada' => 'datetime',
+            'diarsip_pada' => 'datetime',
+            'teruskan_ke_whatsapp_pada' => 'datetime',
         ];
     public function pejabat(){
         return $this->belongsTo(Pejabat::class);
     }
     public function arsip(){
         return $this->belongsTo(Arsip::class);
+    }
+    public function wa_pejabat(){
+        return $this->belongsTo(Pejabat::class, 'whatsapp_pejabat');
     }
       public function getDibacaAttribute($key)
       {

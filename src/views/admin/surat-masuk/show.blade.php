@@ -10,8 +10,13 @@
 
         <div class="col-lg-12 mt-4">
             @include('cms::backend.layout.error')
+            <form action="{{ earsip_route('surat-masuk.disposisi',$data->id) }}" class="action" method="post" enctype="multipart/form-data">
+              @method('PUT')
+              @csrf     
 <!-- Card Surat Masuk -->
-<div class="card mb-4">
+<div class="row">
+  <div class="col-lg-12">
+<div class="card mb-3">
     <div class="card-header text-left"><h4 style="line-height: normal;margin-bottom:0">DISPOSISI SURAT</h4></div>
     <div class="card-body">
       <div class="row">
@@ -103,10 +108,10 @@
                 }
               </style>
 
+              
+                    @if(earsip_user()->is_kasubag() || earsip_user()->is_operator())
                 <h4 class="mb-4">Tindak lanjut</h4>
-                <form action="{{ earsip_route('surat-masuk.disposisi',$data->id) }}" class="action" method="post">
-                    @method('PUT')
-                    @csrf
+
                 <ul class="timeline">'
                     @if($data->sudah_diteruskan_kekadis())
                     <li class="timeline-item">
@@ -119,22 +124,22 @@
                             <ul>
                             @foreach($data->disposisis as $row)
                                 <li>
-                                  <strong>{{ $row->pejabat->jabatan }}</strong>
+                                  <strong>{{ $row->pejabat->jabatan }} @if(earsip_user()->pejabat->id == $row->pejabat->id) <sup class="badge badge-danger">Anda</sup> @endif <small class="pull-right text-danger">{{ $row->created_at->diffForhumans() }}</small></strong>
                                   @if(earsip_user()->pejabat->id == $row->pejabat->id)
                                   @if($row->belum_dibalas())<br>
                                 <code>Belum ada balasan</code>
                                     <br>
                                 <div class="balas" style="display: none">
                                 <textarea placeholder="Tulis catatan disini" name="catatan" class="form-control form-control-sm"></textarea>
-                                <button name="respon_disposisi" value="true" class="btn btn-sm btn-primary mt-2"><i class="fa fa-reply"></i> Kirim Catatan</button>
+                                <button name="respon_disposisi" value="true" class="btn btn-sm btn-primary mt-2"><i class="fa fa-reply"></i> Kirim Balasan</button>
                                 </div>
-                                  <span onclick="$('.balas').show();$(this).hide()" class="mt-2 btn btn-sm btn-outline-primary"> <i class="fa fa-pencil"></i> Tulis Catatan</span>
+                                  <span onclick="$('.balas').show();$(this).hide()" class="mt-2 btn btn-sm btn-outline-primary"> <i class="fa fa-pencil"></i> Tulis Balasan</span>
                                   @else
-                                        <p class="text-muted"><i class="fa fa-reply"></i> {{ $row->catatan }} <br><small><i class="fa fa-clock-o "></i> {{ $row->dibalas_pada->diffForhumans() }}</small></p>
+                                        <p class="alert alert-info"><i class="fa fa-reply"></i> {{ $row->catatan }} <br><small><i class="fa fa-clock-o "></i> {{ $row->dibalas_pada->diffForhumans() }}</small></p>
                                   @endif
                                   @else
                                   @if(!$row->belum_dibalas())
-                                    <p class="text-muted"><i class="fa fa-comment"></i> {{ $data->catatan }} <br><small><i class="fa fa-clock-o "></i> {{ $row->dibalas_pada->diffForhumans() }}</small></p>
+                                    <p class="alert alert-info"><small><i class="fa fa-reply"></i>  Balasan : {{ $row->dibalas_pada->diffForhumans() }}</small><br>"{{ $row->catatan }}"</p>
                                 @else
                                 <br>
                                 <code>Belum ada balasan</code>
@@ -157,7 +162,7 @@
                            <li>{{ $data->catatan ?? '-' }}</li>
                             </ul>
                             </p>
-                            <small class="time">{{ $data->diteruskan_ke_kadis->diffForhumans() }}</small>
+                            <small class="time text-danger">{{ $data->diteruskan_ke_kadis->diffForhumans() }}</small>
                             @else
 
                             @if(earsip_user()->is_kadis())
@@ -209,7 +214,7 @@
                             @if($data->sudah_paraf())
                                  <h6 class="card-title">Paraf Kasubag Umum</h6>
                             <p class="card-text mb-1">Kasubag memeriksa dan memberikan paraf persetujuan disposisi.</p>
-                            <small class="time">{{ $data->paraf_kasubagumum_pada->diffForhumans()}}</small>
+                            <small class="time text-danger">{{ $data->paraf_kasubagumum_pada->diffForhumans()}}</small>
                             @else
                             @if(earsip_user()->is_kasubag())
 
@@ -239,7 +244,7 @@
                       <div class="card-body">
                         <h6 class="card-title">Surat Diterima & Diinput</h6>
                         <p class="card-text mb-1">Operator menginput surat ke sistem.</p>
-                        <small class="time">{{ $data->created_at->diffForhumans() }}</small>
+                        <small class="time text-danger">{{ $data->created_at->diffForhumans() }}</small>
                       </div>
                     </div>
                   </li>
@@ -247,20 +252,132 @@
 
 
                 </ul>
-            </form>
+                @endif
+           
           </div>
       </div>
 
     </div>
   </div>
+</div>
+    @if(earsip_user()->is_kabid())
+    <div class="col-lg-12">
+    <div class="alert alert-warning" style="border:4px dashed brown">
+      <i class="fa fa-reply pull-right"></i>
+    <p><strong>Harap :</strong><br>
+     @foreach($data->harapan as $row)
+     - {{ $row }}<br>
+     @endforeach
+  </p>
+  <p><strong>Catatan :</strong><br>
+   {{$data->catatan}}
+ </p>
+  </div>
+</div>
+  @endif
+  <div class="col-lg-12 mb-3">
   <div class="card">
     <div class="card-header bg-danger text-white"> <i class="fa fa-file-pdf-o"></i> FILE SURAT</div>
     <div class="card-body p-0">
         <embed src="{{$data->file_surat}}" type="application/pdf" width="100%" height="600px" />
+          @if(earsip_user()->is_kabid())
+          @php 
+          $teruskan = $data->disposisis->where('pejabat_id',earsip_user()->pejabat->id)->first();
+          @endphp
+          @if($teruskan->teruskan_ke_whatsapp_pada)
+          <div class="p-3">
+            <p class="card-text mb-1">Surat ini sudah diteruskan ke whatsapp <b> {{ $teruskan->wa_pejabat->jabatan }}</b> <strong>{{ $teruskan->teruskan_ke_whatsapp_pada->diffForhumans() }}</strong></p>
+            <p class="card-text mb-1">Pesan : <strong>{{ $teruskan->catatan }}</strong></p>
+          </div>
+          @else 
+
+     <div class="p-3">
+      <div class="form-group">
+        <label for="">Teruskan ke whatsapp :</label>
+        <select name="pejabat_id" id="" class="form-control form-control-sm form-control-select">
+          <option value="">-- Pilih Staff --</option>
+          @foreach($staff as $row)
+          <option value="{{ $row->id }}">{{ $row->jabatan }}</option>
+          @endforeach
+        </select>
+       </div>
+       <div class="form-group">
+        <label for="">Catatan :</label>
+        <textarea name="pesan" class="form-control form-control-sm" id="" rows="3" placeholder="Tulis pesan disini.."></textarea>
+       </div>
+       <div class="form-group">
+   
+        <button class="btn btn-sm btn-primary" name="kirim_wa" value="1"><i class="fa fa-send"></i> Kirim ke Whatsapp</button>
+       </div>
+     </div>
+     @endif
+          @endif
+          @if(earsip_user()->is_kadis())
+          <div class="p-3">
+            @if($data->disposisis->count())
+            <p class="card-text mb-1">Sudah diteruskan kepada :
+              <ul>
+            @foreach($data->disposisis as $row)
+            <li>
+              <strong>{{ $row->pejabat->jabatan }}</strong>
+            </li>
+            @endforeach
+          </ul>
+          </p>
+            <p class="card-text mb-1">Dengan harapan :
+              <ul>
+              @foreach($data->harapan as $row)
+                  <li>{{ $row }}</li>
+              @endforeach
+              </ul>
+              </p>
+           <p class="card-text mb-1">Catatan :
+              <ul>
+             <li>{{ $data->catatan ?? '-' }}</li>
+              </ul>
+              </p>
+            @else
+            <h6 class="card-title">Teruskan surat ini kepada :</h6>
+
+            <div class="form-group ">
+                @foreach($pejabat as $row)
+                <div class="animated-checkbox">
+                  <label>
+                    <input  type="checkbox" name="pejabat_id[]" value="{{ $row->id }}">
+                    <span class="label-text">{{ $row->jabatan }}</span>
+                  </label>
+                </div>
+                @endforeach
+              </div>
+              <h6 class="card-title">Dengan Hormat harap :</h6>
+
+              <div class="form-group ">
+                  @foreach(['Tanggapan dan Saran','Proses Lebih lanjut','Koordinasi / Konfirmasikan'] as $row)
+                  <div class="animated-checkbox">
+                    <label>
+                      <input type="checkbox" name="harapan[]" value="{{ $row }}">
+                      <span class="label-text">{{ $row }}</span>
+                    </label>
+                  </div>
+                  @endforeach
+                </div>
+                <h6 class="card-title">Catatan :</h6>
+                <div class="form-group ">
+                <textarea name="catatan" class="form-control" style="font-size:15px" id="" rows="3" placeholder="Tuliskan catatan disini.."></textarea>
+                </div>
+                <button name="kadis_meneruskan" value="1" class="btn btn-sm btn-primary">
+                  Proses dipsosisi <i class="fa fa-mail-forward"></i>
+                </button>
+          @endif
+
+          </div>
+          @endif
     </div>
   </div>
+</div>
+</form>
         </div>
-    </div>
+    </div></div>
     @push('scripts')
         @include('cms::backend.layout.js')
     @endpush

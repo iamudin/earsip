@@ -27,6 +27,7 @@
                                     <input class="form-control form-control-sm" name="nomor_surat" type="text"
                                         placeholder="Nomor Surat"
                                         value="{{ $data->nomor_surat??null }}"
+                                        required
                                         >
                                 </div>
                             </div>
@@ -36,6 +37,7 @@
                                     <input name="surat_dari" class="form-control form-control-sm" type="text"
                                         placeholder="Instansi / Organisasi Pengirim"
                                         value="{{ $data->surat_dari??null }}"
+                                        required
                                         >
                                 </div>
                             </div>
@@ -45,13 +47,14 @@
                                     <input name="tanggal_surat" class="form-control form-control-sm" type="date"
                                         placeholder="Enter email address"
                                         value="{{ $data->tanggal_surat??null }}"
+                                        required
                                         >
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label class="control-label col-md-3">Hal</label>
                                 <div class="col-md-9">
-                                    <textarea name="hal" class="form-control form-control-sm" placeholder="Hal surat">{{ $data->hal??null }}</textarea>
+                                    <textarea required name="hal" class="form-control form-control-sm" placeholder="Hal surat">{{ $data->hal??null }}</textarea>
                                 </div>
                             </div>
 
@@ -65,9 +68,9 @@
                             <div class="form-group row">
                                 <label class="control-label col-md-3">Tgl Terima</label>
                                 <div class="col-md-9">
-                                    <input class="form-control col-md-12" name="tanggal_terima" type="date"
+                                    <input required class="form-control col-md-12" name="tanggal_terima" type="date"
                                         placeholder="Enter email address"
-                                        value="{{ $data->tanggal_terima??null }}"
+                                        value="{{ $data->tanggal_terima?? date('Y-m-d') }}"
                                         >
                                 </div>
                             </div>
@@ -76,14 +79,14 @@
                                 <div class="col-md-9">
 
 
-                                    <span style="font-size:20px;font-weight: bold">@isset($data) {{ $data->nomor_agenda ??null }} @else 1  @endisset</span>
+                                    <span style="font-size:20px;font-weight: bold">@isset($data) {{ $data->nomor_agenda ??null }} @else {{ $noagenda }}  @endisset</span>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label class="control-label col-md-3">Sifat</label>
                                 <div class="col-md-9">
                                     @foreach (['Sangat Segera', 'Segera', 'Rahasia'] as $row)
-                                        <input type="radio" value="{{ str($row)->upper() }}" name="sifat" {{ $data && $data->sifat == str($row)->upper() ? 'checked' : null  }}>
+                                        <input required type="radio" value="{{ str($row)->upper() }}" name="sifat" {{ $data && $data->sifat == str($row)->upper() ? 'checked' : null  }}>
                                         {{ str($row)->upper() }} &nbsp;&nbsp;&nbsp;
                                     @endforeach
                                 </div>
@@ -92,7 +95,7 @@
                                 <label class="control-label col-md-3">File Surat</label>
                                 <div class="col-md-9">
                                     <input accept="application/pdf" class="form-control-sm" name="file_surat"
-                                        type="file" >
+                                        type="file" {{ !$data  ? 'required' :''}} >
                                     @if($data && $data->file_surat && media_exists($data->file_surat))
                                     <br>
                                     <a href="{{ $data->file_surat }}" class="btn btn-sm btn-outline-danger"> <i class="fa fa-file-pdf-o "></i> LIHAT SURAT</a>

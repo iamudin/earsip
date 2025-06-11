@@ -10,6 +10,12 @@ return [
     'route' => null,
     'title' => env('APP_TITLE_EARSIP','e-Arsip'),
     'description' => env('APP_DESCRIPTION_EARSIP','Arsip Surat Masuk Elektronik'),
+    'api'=> [
+        'wa_sender'=>[
+            'url'=> env('WA_SENDER_URL',null),
+            'session'=> env('WA_SENDER_SESSION',null),
+        ]
+        ],
     'module' =>
     array(
         [
@@ -25,13 +31,6 @@ return [
             'route' => 'surat-masuk.index',
             'icon' => 'fa-envelope',
             'path' => 'surat-masuk',
-            'only_admin' => false,
-        ],
-            [
-            'name' => 'Riwayat Disposisi',
-            'route' => 'riwayat.index',
-            'icon' => 'fa-mail-forward',
-            'path' => 'riwayat',
             'only_admin' => false,
         ],
         [

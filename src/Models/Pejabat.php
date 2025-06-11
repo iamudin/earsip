@@ -15,11 +15,16 @@ class Pejabat extends Model
         'nip',
         'nohp',
         'jabatan',
+        'atasan_id',
         'alias_jabatan',
+        'penerima_disposisi',
         'urutan'
         ];
     public function user(){
         return $this->belongsTo(User::class);
+    }
+    public function staff(){
+        return $this->hasMany(Pejabat::class,'atasan_id');
     }
   public function disposisis(){
         return $this->hasMany(Disposisi::class);

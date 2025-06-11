@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('jabatan')->nullable();
             $table->string('nohp')->nullable();
             $table->string('urutan')->nullable();
+            $table->tinyInteger('penerima_disposisi')->default(0);
             $table->string('alias_jabatan')->nullable()->comment('OPERATOR','KASUBAGUMUM','KADIS','SEKRETARIS','KABID');
             $table->timestamps();
             $table->softDeletes();

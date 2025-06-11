@@ -7,7 +7,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class User extends BaseUser
 {
     use  SoftDeletes;
-
+    protected $casts = [
+        'last_login_at'=> 'datetime'
+    ];
     public function is_operator(){
         return $this->pejabat?->alias_jabatan == 'OPERATOR';
     }
