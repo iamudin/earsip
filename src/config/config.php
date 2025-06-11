@@ -3,7 +3,7 @@ return [
     'name'=>'E-Arsip',
     'url'=> env('APP_URL_EARSIP',null),
     'path'=>'earsip',
-    'logo'=>env('APP_LOGO_EARSIP','/noimage.png'),
+    'logo'=>env('APP_LOGO_EARSIP','/noimage.webp'),
     'path_url'=>null,
     'icon' => 'fa-archive',
     'user' => null,
