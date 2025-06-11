@@ -11,6 +11,7 @@ class EArsipServiceProvider extends ServiceProvider
 {
     protected function registerRoutes()
     {
+        //tes
         if(config('app.sub_app_enabled')){
         Route::middleware(['web','admin.earsip'])
         ->group(function () {
