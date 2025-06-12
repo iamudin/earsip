@@ -139,6 +139,7 @@ class SuratMasukController extends Controller  implements HasMiddleware
            $filearsip =  $this->arsip_surat($request,$arsip->id);
             WaSender::dispatch([
                 'to' => $pejabat->nohp,
+                'type'=>'file',
                 'text' => "Ada Disposisi surat baru diteruskan oleh kasubag umum.",
                 'document_url'=> $arsip->file_surat ? $filearsip : null,
                 'document_name' => $arsip->nomor_surat . '.pdf',
