@@ -162,7 +162,7 @@ class SuratMasukController extends Controller  implements HasMiddleware
             ]);
             WaSender::dispatch([
                 'to' => $pejabat->nohp,
-                'text' => "Yth. Kepala Dinas, Ada Disposisi surat baru diteruskan oleh kasubag umum.\nKlik tautan berikut untuk melihat\n" . $notif,
+                'text' => "Surat masuk dari ".$arsip->surat_dari." untuk di disposisi di link berikut :\n" . $notif,
             ]);
             return redirect(earsip_route('surat-masuk.index'))->with('success', 'Surat berhasil di paraf dan diteruskan ke Kepala Dinas');
         }
