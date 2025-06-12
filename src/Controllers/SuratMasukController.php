@@ -139,10 +139,7 @@ class SuratMasukController extends Controller  implements HasMiddleware
            $filearsip =  $this->arsip_surat($request,$arsip->id);
             WaSender::dispatch([
                 'to' => $pejabat->nohp,
-                'type'=>'file',
-                'text' => "Ada Disposisi surat baru diteruskan oleh kasubag umum.",
-                'document_url'=> $arsip->file_surat ? $filearsip : null,
-                'document_name' => $arsip->nomor_surat . '.pdf',
+                'text' => "Disposisi surat masuk untuk ditindak lanjuti, klik tautan berikut untuk mengunduh surat :\n". $filearsip,
             ]);
        
             return redirect(earsip_route('surat-masuk.index'))->with('success', 'Surat berhasil diteruskan ke ke '.$pejabat->jabatan);
@@ -165,7 +162,7 @@ class SuratMasukController extends Controller  implements HasMiddleware
             ]);
             WaSender::dispatch([
                 'to' => $pejabat->nohp,
-                'text' => "Yth. Kepala Dinas, Ada Disposisi surat baru diteruskan oleh kasubag umum.\n Klik tautan berikut untuk melihat " . $notif,
+                'text' => "Yth. Kepala Dinas, Ada Disposisi surat baru diteruskan oleh kasubag umum.\nKlik tautan berikut untuk melihat\n" . $notif,
             ]);
             return redirect(earsip_route('surat-masuk.index'))->with('success', 'Surat berhasil di paraf dan diteruskan ke Kepala Dinas');
         }
@@ -194,12 +191,12 @@ class SuratMasukController extends Controller  implements HasMiddleware
             $pejabat = Pejabat::whereIn('id', $request->pejabat_id)->get();
             foreach ($request->pejabat_id as $row) {
                 $dp = $pejabat->where('id', $row)->first();
-                $notif =  notifications()->create([
-                    'user_id' => $dp->user_id,
+            
+                $notif = $arsip->addNotification([
+                    'to_user' => $dp->user_id,
                     'title' => 'Surat Baru NO. ' . $arsip->nomor_surat,
-                    'message' => 'Ada surat terbaru untuk anda',
+                    'message' => 'Ada surat Terbaru untuk anda',
                     'url' => earsip_route('surat-masuk.show', $arsip->id),
-                    'type' => 'default',
                 ]);
                 $arsip->disposisis()->updateOrCreate([
                     'arsip_id' => $arsip->id,
@@ -207,7 +204,7 @@ class SuratMasukController extends Controller  implements HasMiddleware
                 ]);
                 WaSender::dispatch([
                     'to' => $dp->nohp,
-                    'text' => "Yth. Kepala Dinas, Ada Disposisi surat baru diteruskan oleh kasubag umum.\n Klik tautan berikut untuk melihat " . route('notifreader', $notif->id),
+                    'text' => "Disposisi Kepala Dinas surat masuk dari ".$arsip->surat_dari.".\n Klik tautan berikut untuk melihat.\n" . $notif,
                 ]);
             }
 
@@ -267,16 +264,15 @@ class SuratMasukController extends Controller  implements HasMiddleware
             if (!empty($fname)) {
 
                 $pejabat = Pejabat::select('user_id', 'nohp')->whereAliasJabatan('KASUBAGUMUM')->first();
-                $notif = notifications()->create([
-                    'user_id' => $pejabat->user_id,
+                $notif = $data->addNotification([
+                    'to_user' => $pejabat->user_id,
                     'title' => 'Surat Baru NO. ' . $request->nomor_surat,
                     'message' => 'Ada surat Terbaru untuk anda',
                     'url' => earsip_route('surat-masuk.show', $data->id),
-                    'type' => 'default',
                 ]);
                 WaSender::dispatch([
                     'to' => $pejabat->nohp,
-                    'text' => "Yth. Kasubag Umum, Ada surat masuk baru.\n Klik tautan berikut untuk melihat " . route('notifreader', $notif->id),
+                    'text' => "Surat masuk dari ".$data->surat_dari.".\nKlik tautan berikut untuk melihat\n" . $notif,
                 ]);
             }
         }
