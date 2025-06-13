@@ -27,7 +27,7 @@ class SuratMasukController extends Controller  implements HasMiddleware
             new Middleware('auth'),
         ];
     }
-
+    
     public function merge_pdf($pdf1,$pdf2)
     {
 
@@ -407,6 +407,55 @@ class SuratMasukController extends Controller  implements HasMiddleware
                 return $btn;
             })
             ->rawColumns(['status', 'action'])
+            ->toJson();
+    }
+
+    public function riwayat(Request $request)
+    {
+        $data = Arsip::with('user.pejabat', 'disposisis.pejabat')->orderBy('nomor_agenda');
+    
+        return DataTables::of($data)
+
+            ->addIndexColumn()
+            ->addColumn('status', function ($row)  {
+                $status = null;
+                if($row->disposisis->count()){
+                $status .= 'Sudah disposisi ke : <br>';
+                $status .= collect($row->disposisis)->map(function($item) {
+                    return strtoupper($item->pejabat->jabatan); 
+                })
+                ->join(', ');
+                }
+                        else{
+                            $status = 'Belum Disposisi';
+                        }    
+            return $status;
+        })
+
+       ->filter(function ($instance) use ($request) {
+        if($cari = $request->cari){
+            $instance->where('nomor_surat', 'like', '%' . $cari . '%')
+                    ->orWhere('surat_dari', 'like', '%' . $cari . '%')
+                    ->orWhere('tanggal_surat', 'like', '%' . $cari . '%')
+                    ->orWhere('tanggal_terima', 'like', '%' . $cari . '%')
+                    ->orWhere('hal', 'like', '%' . $cari . '%');
+          
+        }
+        if($request->tanggal_mulai && !$request->tanggal_akhir){
+            $instance->whereDate('tanggal_surat', '>=', $request->tanggal_mulai);
+        }
+        if($request->tanggal_mulai && $request->tanggal_akhir){
+            $instance->whereBetween('tanggal_surat', [$request->tanggal_mulai,$request->tanggal_mulai]);
+        }
+       })
+            ->addColumn('tanggal_terima', function ($row) {
+                return $row->tanggal_terima->format('d/m/Y');
+            })
+            ->addColumn('tanggal_surat', function ($row) {
+                return $row->tanggal_surat->format('d/m/Y');
+            })
+            
+            ->rawColumns(['status'])
             ->toJson();
     }
 }

@@ -36,6 +36,7 @@ class WaSender implements ShouldQueue
         }
   
     }
+    
     function sendDocument() 
     {
         $response = Http::post(config('earsip.api.wa_sender.url').'/message/send-document', [
