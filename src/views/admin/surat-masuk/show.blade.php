@@ -280,11 +280,11 @@
     <div class="card-header bg-danger text-white"> <i class="fa fa-file-pdf-o"></i> FILE SURAT</div>
     <div class="card-body p-0">
       @if(is_local())
-        <iframe src="{{$data->file_surat}}" type="application/pdf" width="100%" height="600px" />
+        <iframe src="{{$data->file_surat}}" type="application/pdf" width="100%" height="600px"></iframe>
           @else 
-        <iframe src="https://docs.google.com/gview?url={{url($data->file_surat)}}&embedded=true" type="application/pdf" width="100%" height="600px" />
+        <iframe src="https://docs.google.com/gview?url={{url($data->file_surat)}}&embedded=true" type="application/pdf" width="100%" height="600px"></iframe>
 
-          @endif
+      @endif
           @if(earsip_user()->is_kabid())
           @php 
           $teruskan = $data->disposisis->where('pejabat_id',earsip_user()->pejabat->id)->first();
@@ -316,7 +316,7 @@
        </div>
      </div>
      @endif
-          @endif
+    @endif
           @if(earsip_user()->is_kadis())
           <div class="p-3">
             @if($data->disposisis->count())
