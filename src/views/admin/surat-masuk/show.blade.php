@@ -12,7 +12,7 @@
             @include('cms::backend.layout.error')
             <form action="{{ earsip_route('surat-masuk.disposisi',$data->id) }}" class="action" method="post" enctype="multipart/form-data">
               @method('PUT')
-              @csrf     
+              @csrf
 <!-- Card Surat Masuk -->
 <div class="row">
   <div class="col-lg-12">
@@ -35,7 +35,7 @@
                 <tr>
                     <td>Tgl. Surat</td>
                     <td>:</td>
-                    <td>{{ $data->tanggal_surat }}</td>
+                    <td>{{ $data->tanggal_surat->transalatedFormat('d F Y') }}</td>
                 </tr>
             </table>
         </div>
@@ -44,7 +44,7 @@
                 <tr>
                     <td style="width:30%">Diterima Tgl</td>
                     <td style="width:2%">:</td>
-                    <td style="68%">{{ $data->tanggal_terima }}</td>
+                    <td style="68%">{{ $data->tanggal_terima->transalatedFormat('d F Y') }}</td>
                 </tr>
                 <tr>
                     <td>No. Agenda</td>
@@ -108,7 +108,7 @@
                 }
               </style>
 
-              
+
                     @if(earsip_user()->is_kasubag() || earsip_user()->is_operator())
                 <h4 class="mb-4">Tindak lanjut</h4>
 
@@ -253,7 +253,7 @@
 
                 </ul>
                 @endif
-           
+
           </div>
       </div>
 
@@ -281,12 +281,12 @@
     <div class="card-body p-0">
       @if(is_local())
         <iframe src="{{$data->file_surat}}" type="application/pdf" width="100%" height="600px"></iframe>
-          @else 
+          @else
         <iframe src="https://docs.google.com/gview?url={{url($data->file_surat)}}&embedded=true" type="application/pdf" width="100%" height="600px"></iframe>
 
       @endif
           @if(earsip_user()->is_kabid())
-          @php 
+          @php
           $teruskan = $data->disposisis->where('pejabat_id',earsip_user()->pejabat->id)->first();
           @endphp
           @if($teruskan->teruskan_ke_whatsapp_pada)
@@ -294,7 +294,7 @@
             <p class="card-text mb-1">Surat ini sudah diteruskan ke whatsapp <b> {{ $teruskan->wa_pejabat->jabatan }}</b> <strong>{{ $teruskan->teruskan_ke_whatsapp_pada->diffForhumans() }}</strong></p>
             <p class="card-text mb-1">Pesan : <strong>{{ $teruskan->catatan }}</strong></p>
           </div>
-          @else 
+          @else
 
      <div class="p-3">
       <div class="form-group">
@@ -311,7 +311,7 @@
         <textarea name="pesan" class="form-control form-control-sm" id="" rows="3" placeholder="Tulis pesan disini.."></textarea>
        </div>
        <div class="form-group">
-   
+
         <button class="btn btn-sm btn-primary" name="kirim_wa" value="1"><i class="fa fa-send"></i> Kirim ke Whatsapp</button>
        </div>
      </div>

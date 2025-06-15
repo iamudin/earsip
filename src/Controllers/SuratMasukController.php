@@ -27,13 +27,13 @@ class SuratMasukController extends Controller  implements HasMiddleware
             new Middleware('auth'),
         ];
     }
-    
+
     public function merge_pdf($pdf1,$pdf2)
     {
 
-    
+
         $pdf = new Fpdi();
-    
+
         $files = [
             $pdf1,$pdf2
         ];
@@ -41,16 +41,16 @@ class SuratMasukController extends Controller  implements HasMiddleware
 
         foreach ($files as $file) {
             $pageCount = $pdf->setSourceFile($file);
-    
+
             for ($page = 1; $page <= $pageCount; $page++) {
                 $template = $pdf->importPage($page);
                 $size = $pdf->getTemplateSize($template);
-    
+
                 $pdf->AddPage($size['orientation'], [$size['width'], $size['height']]);
                 $pdf->useTemplate($template);
             }
         }
-    
+
         // Output PDF langsung ke browser (tanpa simpan ke disk)
         return $pdf->Output('S'); // 'S' artinya string
     }catch(\Exception $e){
@@ -68,7 +68,7 @@ class SuratMasukController extends Controller  implements HasMiddleware
         ]);
         try{
 
-        
+
         $tempDir = storage_path('app/temp');
         if (!is_dir($tempDir)) {
             mkdir($tempDir, 0777, true);
@@ -80,7 +80,7 @@ class SuratMasukController extends Controller  implements HasMiddleware
         $pdfString = $this->merge_pdf($pdfdisposisi,$filesurat);
         $tmpPath = tempnam(sys_get_temp_dir(), 'pdf_');
         file_put_contents($tmpPath, $pdfString);
-    
+
         // 3. Buat instance UploadedFile dari file temp
         $uploaded = new UploadedFile(
             $tmpPath,
@@ -112,7 +112,7 @@ class SuratMasukController extends Controller  implements HasMiddleware
     }catch(\Exception $e){
         return back()->with('warning','Proses gagal '.$e->getMessage());
     }
-        
+
     }
     public function create()
     {
@@ -141,7 +141,7 @@ class SuratMasukController extends Controller  implements HasMiddleware
                 'to' => $pejabat->nohp,
                 'text' => "Disposisi surat masuk untuk ditindak lanjuti, klik tautan berikut untuk mengunduh surat :\n". $filearsip,
             ]);
-       
+
             return redirect(earsip_route('surat-masuk.index'))->with('success', 'Surat berhasil diteruskan ke ke '.$pejabat->jabatan);
 
 
@@ -191,7 +191,7 @@ class SuratMasukController extends Controller  implements HasMiddleware
             $pejabat = Pejabat::whereIn('id', $request->pejabat_id)->get();
             foreach ($request->pejabat_id as $row) {
                 $dp = $pejabat->where('id', $row)->first();
-            
+
                 $notif = $arsip->addNotification([
                     'to_user' => $dp->user_id,
                     'title' => 'Surat Baru NO. ' . $arsip->nomor_surat,
@@ -363,18 +363,18 @@ class SuratMasukController extends Controller  implements HasMiddleware
                    else {
                         $status = '<span class="badge badge-warning">Belum Dibaca</span>';
                     }
-                
+
                 } elseif ($user->is_kadis()) {
                     $status = '<span class="badge badge-info">Belum Disposisi</span>';
                     if ($row->disposisi_pada) {
                     $status = '<code>Diteruskan kepada </code><br>';
 
                         $status .= collect($row->disposisis)->map(function($item) {
-                return strtoupper($item->pejabat->jabatan); 
+                return strtoupper($item->pejabat->jabatan);
             })
             ->join(', ');
                         $status .= '<br><code>'.$row->disposisi_pada?->diffForHumans().'</code>';
-                        
+
                     }
                 } elseif ($user->is_kasubag()) {
                     $status = '<span class="badge badge-info">Belum Diparaf</span>';
@@ -393,10 +393,10 @@ class SuratMasukController extends Controller  implements HasMiddleware
             })
 
             ->addColumn('tanggal_terima', function ($row) {
-                return $row->tanggal_terima->format('d F Y');
+                return $row->tanggal_terima->translatedFormat('d F Y');
             })
             ->addColumn('tanggal_surat', function ($row) {
-                return $row->tanggal_surat->format('d F Y');
+                return $row->tanggal_surat->translatedFormat('d F Y');
             })
             ->addColumn('action', function ($row) {
                 $btn = '<div class="btn-group">';
@@ -413,7 +413,7 @@ class SuratMasukController extends Controller  implements HasMiddleware
     public function riwayat(Request $request)
     {
         $data = Arsip::with('user.pejabat', 'disposisis.pejabat')->orderBy('nomor_agenda');
-    
+
         return DataTables::of($data)
 
             ->addIndexColumn()
@@ -422,13 +422,13 @@ class SuratMasukController extends Controller  implements HasMiddleware
                 if($row->disposisis->count()){
                 $status .= 'Sudah disposisi ke : <br>';
                 $status .= collect($row->disposisis)->map(function($item) {
-                    return strtoupper($item->pejabat->jabatan); 
+                    return strtoupper($item->pejabat->jabatan);
                 })
                 ->join(', ');
                 }
                         else{
                             $status = 'Belum Disposisi';
-                        }    
+                        }
             return $status;
         })
 
@@ -439,7 +439,7 @@ class SuratMasukController extends Controller  implements HasMiddleware
                     ->orWhere('tanggal_surat', 'like', '%' . $cari . '%')
                     ->orWhere('tanggal_terima', 'like', '%' . $cari . '%')
                     ->orWhere('hal', 'like', '%' . $cari . '%');
-          
+
         }
         if($request->tanggal_mulai && !$request->tanggal_akhir){
             $instance->whereDate('tanggal_surat', '>=', $request->tanggal_mulai);
@@ -454,7 +454,7 @@ class SuratMasukController extends Controller  implements HasMiddleware
             ->addColumn('tanggal_surat', function ($row) {
                 return $row->tanggal_surat->format('d/m/Y');
             })
-            
+
             ->rawColumns(['status'])
             ->toJson();
     }

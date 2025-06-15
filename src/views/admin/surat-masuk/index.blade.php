@@ -15,20 +15,19 @@
                         Baru</a> </li>
                 <li class="nav-item"><a  href="#" class="nav-link  {{ request()->segment(2) ? 'active':'' }}" data-toggle="tab" onclick="location.href='{{ earsip_route('surat-masuk.index.selesai') }}'"> <i class="fa fa-mail-forward"></i>
                         Sudah Disposisi </a></li>
-          
+
             </ul>
-         
+
 
             <table class="datatable table table-hover table-bordered bg-white" style="font-size:small;background:#fff">
                 <thead>
                     <tr>
                         <th width="10px">No</th>
-                        <th>Tgl Terima</th>
+                        <th>Pengirim</th>
                         <th>Tgl Surat</th>
                         <th>Nomor</th>
-                        <th>Asal Surat</th>
-                        <th>Hal</th>
-                        <th>Sifat</th>
+                        <th>Perihal</th>
+                        <th>Diterima Tgl</th>
                         <th>Status</th>
                         <th style="width:10px">Aksi</th>
                     </tr>
@@ -63,13 +62,13 @@
                         searchable: false
                     },
 
-
-                    {
-                        data: 'tanggal_terima',
+    {
+                        data: 'surat_dari',
                         searchable: true,
-                        name: 'tanggal_terima',
+                        name: 'surat_dari',
                         orderable: false
                     },
+
                     {
                         data: 'tanggal_surat',
                         searchable: true,
@@ -82,25 +81,21 @@
                         name: 'nomor_surat',
                         orderable: false
                     },
-                    {
-                        data: 'surat_dari',
-                        searchable: true,
-                        name: 'surat_dari',
-                        orderable: false
-                    },
+
                     {
                         data: 'hal',
                         searchable: true,
                         name: 'hal',
                         orderable: false
                     },
+
                     {
-                        data: 'sifat',
+                        data: 'tanggal_terima',
                         searchable: true,
-                        name: 'sifat',
+                        name: 'tanggal_terima',
                         orderable: false
                     },
-                    {
+                        {
                         data: 'status',
                         searchable: true,
                         name: 'status',
