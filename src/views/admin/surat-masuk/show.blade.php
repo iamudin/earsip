@@ -35,7 +35,7 @@
                 <tr>
                     <td>Tgl. Surat</td>
                     <td>:</td>
-                    <td>{{ $data->tanggal_surat->transalatedFormat('d F Y') }}</td>
+                    <td>{{ $data->tanggal_surat->translatedFormat('d F Y') }}</td>
                 </tr>
             </table>
         </div>
@@ -44,7 +44,7 @@
                 <tr>
                     <td style="width:30%">Diterima Tgl</td>
                     <td style="width:2%">:</td>
-                    <td style="68%">{{ $data->tanggal_terima->transalatedFormat('d F Y') }}</td>
+                    <td style="68%">{{ $data->tanggal_terima->translatedFormat('d F Y') }}</td>
                 </tr>
                 <tr>
                     <td>No. Agenda</td>
