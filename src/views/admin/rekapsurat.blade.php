@@ -12,8 +12,8 @@
               <input value="{{ request('tanggal_mulai',null) }}" onchange="if(this.value) {location.href='{{ earsip_route('earsip.dashboard') }}?tanggal_mulai='+this.value}" type="date" class="form-control" id="tanggal_mulai" name="tanggal_mulai">
             </div>
           </div>
-          
-    
+
+
         </div>
         <div class="col-6">
           <div class="form-group">
@@ -32,12 +32,11 @@
       </div>
     </form>
     </div>
-  
+
   </div>
   <div class="col-lg-12 text-center mt-4 mb-3">
-    
+
     <h4>AGENDA SURAT MASUK PADA DINAS PERKEBUNAN KABUPATEN BENGKALIS <br> {{ str($periode)->upper() }}</h4>
-  </div>
 <table class="datatable table table-hover table-bordered bg-white" style="font-size:small;background:#fff">
     <thead>
         <tr>
@@ -52,6 +51,7 @@
     </thead>
 
 </table>
+  </div>
 
 <script type="text/javascript">
     window.addEventListener('DOMContentLoaded', function() {
@@ -118,7 +118,7 @@
                     name: 'status',
                     orderable: false
                 },
-            
+
             ],
             responsive: true,
 
