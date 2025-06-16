@@ -451,7 +451,7 @@ class SuratMasukController extends Controller  implements HasMiddleware
             $instance->whereDate('tanggal_surat', '>=', $request->tanggal_mulai);
         }
         if($request->tanggal_mulai && $request->tanggal_akhir){
-            $instance->whereBetween('tanggal_surat', [$request->tanggal_mulai,$request->tanggal_mulai]);
+            $instance->whereBetween('tanggal_surat', [$request->tanggal_mulai,$request->tanggal_akhir]);
         }
        })
             ->addColumn('tanggal_terima', function ($row) {
