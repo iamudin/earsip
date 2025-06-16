@@ -22,5 +22,6 @@ Route::group([
         Route::post('surat-masuk/datatable', [SuratMasukController::class, 'datatable'])->name('surat-masuk.datatable');
         Route::post('surat-masuk/riwayat', [SuratMasukController::class, 'riwayat'])->name('surat-masuk.riwayat');
         Route::put('surat-masuk/{arsip}/disposisi', [SuratMasukController::class, 'disposisi'])->name('surat-masuk.disposisi');
+        Route::get('surat-masuk/{arsip}/destroy', [SuratMasukController::class, 'destroy'])->name('surat-masuk.destroy');
         Route::post('mergepdf', [SuratMasukController::class, 'merge'])->name('merge.pdf');
     });

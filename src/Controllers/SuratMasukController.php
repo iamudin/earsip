@@ -401,15 +401,21 @@ class SuratMasukController extends Controller  implements HasMiddleware
             ->addColumn('action', function ($row) {
                 $btn = '<div class="btn-group">';
                 $btn .= '<a href="' . earsip_route('surat-masuk.show', $row->id) . '" class="btn btn-md btn-primary fa fa-eye"></a>';
-                $btn .= earsip_user()->pejabat->alias_jabatan == 'OPERATOR' ? '<a href="' . earsip_route('surat-masuk.edit', $row->id) . '" class="btn btn-md btn-warning fa fa-edit"></a>' : null;
-                $btn .= earsip_user()->pejabat->alias_jabatan == 'OPERATOR' ? '<a href="" class="btn btn-md btn-danger fa fa-trash-o"></a>' : null;
+                $btn .= earsip_user()->is_operator() == 'OPERATOR' ? '<a href="' . earsip_route('surat-masuk.edit', $row->id) . '" class="btn btn-md btn-warning fa fa-edit"></a>' : null;
+                $btn .= earsip_user()->is_operator() == 'OPERATOR' && !$row->sudah_paraf() ? '<a href="'.earsip_route('surat-masuk.destroy',$row->id).'" onclick="return confirm(\'Anda yakin untuk menghapus ?\')" class="btn btn-md btn-danger fa fa-trash-o"></a>' : null;
                 $btn .= '</div>';
                 return $btn;
             })
             ->rawColumns(['status', 'action'])
             ->toJson();
     }
-
+    public function destroy(Arsip $arsip){
+        if(earsip_user()->is_operator()){
+            $arsip->forceDelete();
+            return redirect(earsip_route('surat-masuk.index'))->with('success','Surat berhasil dihapus');
+        }
+        abort(403,'Akses dibatasi');
+    }
     public function riwayat(Request $request)
     {
         $data = Arsip::with('user.pejabat', 'disposisis.pejabat')->orderBy('nomor_agenda');

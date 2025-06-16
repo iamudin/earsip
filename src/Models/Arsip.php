@@ -37,6 +37,19 @@ class Arsip extends Model
             'disposisi_pada' => 'datetime',
 
         ];
+            public static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($arsip) {
+            if ($arsip->isForceDeleting()) {
+                foreach($arsip->files as $row){
+                    $row->deleteFile();
+                }
+            }
+        });
+
+    }
     public function user(){
         return $this->belongsTo(User::class);
     }
