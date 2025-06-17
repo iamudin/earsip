@@ -133,7 +133,7 @@ class SuratMasukController extends Controller  implements HasMiddleware
                 'file_arsip' => $fname
             ]);
             unlink($pdfdisposisi);
-            return url($fname);
+            return $fname;
         } catch (\Exception $e) {
             return back()->with('warning', 'Proses gagal ' . $e->getMessage());
         }
@@ -207,7 +207,16 @@ class SuratMasukController extends Controller  implements HasMiddleware
     }
     public function disposisi(Request $request, Arsip $arsip)
     {
-
+        if($request->cetak_disposisi){
+            $file = $this->arsip_utama($request,$arsip->id);
+            $arsip->update([
+                'file_arsip' => $file,
+            ]);
+            $f = File::whereFileName(basename($file))->first();
+            return response()->download(Storage::path($f->file_path), 'disposisi-'.$arsip->nomor_surat.'.pdf', [
+                'Content-Type' => 'application/pdf',
+            ]);
+        }
         if($request->kirim_wa && $request->pejabat_id){
             $pejabat = Pejabat::find($request->pejabat_id);
             $d = $arsip->disposisis()->updateOrCreate([
@@ -428,7 +437,6 @@ class SuratMasukController extends Controller  implements HasMiddleware
                 });
             }
             else{
-
             $data = $data->whereHas('disposisis', function ($q) {
                 $q->where('pejabat_id', earsip_user()->pejabat->id)->whereNotNull('dibaca_pada')->WhereNotNull('teruskan_ke_whatsapp_pada')->orWhereNotNull('diarsip_pada');
             });
@@ -437,29 +445,28 @@ class SuratMasukController extends Controller  implements HasMiddleware
         return DataTables::of($data)
 
             ->addIndexColumn()
-            ->addColumn('status', function ($row) use($user) {
+            ->addColumn('status', function ($row) use ($user) {
                 $status = null;
-                if($user->is_kabid()){
+                if ($user->is_kabid()) {
                     $up = $row->disposisis->where('pejabat_id', $user->pejabat->id)->first();
                     if ($up?->dibaca_pada && $up?->teruskan_ke_whatsapp_pada) {
                         $status = '<span class="badge badge-success">Sudah Dibaca dan Diteruskan ke Whatsapp</span>';
                     } elseif ($up?->dibaca_pada && !$up?->teruskan_ke_whatsapp_pada) {
                         $status = '<span class="badge badge-success">Sudah Dibaca</span>';
-                    }
-                   else {
+                    } else {
                         $status = '<span class="badge badge-warning">Belum Dibaca</span>';
                     }
 
                 } elseif ($user->is_kadis()) {
                     $status = '<span class="badge badge-info">Belum Disposisi</span>';
                     if ($row->disposisi_pada) {
-                    $status = '<code>Diteruskan kepada </code><br>';
+                        $status = '<code>Diteruskan kepada </code><br>';
 
-                        $status .= collect($row->disposisis)->map(function($item) {
-                return strtoupper($item->pejabat->jabatan);
-            })
-            ->join(', ');
-                        $status .= '<br><code>'.$row->disposisi_pada?->diffForHumans().'</code>';
+                        $status .= collect($row->disposisis)->map(function ($item) {
+                            return strtoupper($item->pejabat->jabatan);
+                        })
+                            ->join(', ');
+                        $status .= '<br><code>' . $row->disposisi_pada?->diffForHumans() . '</code>';
 
                     }
                 } elseif ($user->is_kasubag()) {
@@ -467,12 +474,12 @@ class SuratMasukController extends Controller  implements HasMiddleware
                     if ($row->sudah_paraf()) {
                         $status = '<span class="badge badge-success">Sudah Diparaf</span>';
                     }
-                } elseif($user->is_operator()) {
+                } elseif ($user->is_operator()) {
                     $status = '<span class="badge badge-warning">Belum Diproses</span>';
                     if ($row->paraf_kasubagumum_pada && $row->diteruskan_ke_kadis) {
                         $status = '<span class="badge badge-success">Sudah Diproses</span>';
                     }
-                }else{
+                } else {
 
                 }
                 return $status;
@@ -484,8 +491,13 @@ class SuratMasukController extends Controller  implements HasMiddleware
             ->addColumn('tanggal_surat', function ($row) {
                 return $row->tanggal_surat->translatedFormat('d F Y');
             })
-            ->addColumn('action', function ($row) {
+            ->addColumn('action', function ($row) use($user) {
                 $btn = '<div class="btn-group">';
+                
+                $arsip = $row->disposisis->where('pejabat_id',$user->pejabat->id)->first();
+                    if($arsip && $arsip->disposisi_pdf && media_exists($arsip->disposisi_pdf)){
+                        $btn .= '<a href="'. $arsip->disposisi_pdf.'" class="btn btn-md btn-success fa fa-download"> </a>';
+                    }
                 $btn .= '<a href="' . earsip_route('surat-masuk.show', $row->id) . '" class="btn btn-md btn-primary fa fa-eye"></a>';
                 $btn .= earsip_user()->is_operator() == 'OPERATOR' ? '<a href="' . earsip_route('surat-masuk.edit', $row->id) . '" class="btn btn-md btn-warning fa fa-edit"></a>' : null;
                 $btn .= earsip_user()->is_operator() == 'OPERATOR' && !$row->sudah_paraf() ? '<a href="'.earsip_route('surat-masuk.destroy',$row->id).'" onclick="return confirm(\'Anda yakin untuk menghapus ?\')" class="btn btn-md btn-danger fa fa-trash-o"></a>' : null;

@@ -17,7 +17,11 @@
 <div class="row">
   <div class="col-lg-12">
 <div class="card mb-3">
-    <div class="card-header text-left"><h4 style="line-height: normal;margin-bottom:0">DISPOSISI SURAT</h4></div>
+    <div class="card-header text-left"><h4 style="line-height: normal;margin-bottom:0">DISPOSISI SURAT 
+     @if(earsip_user()->is_kasubag() || earsip_user()->is_operator())
+      <button class="btn btn-sm btn-primary pull-right" name="cetak_disposisi" value="true"><i class="fa fa-print"></i> Cetak Arsip</button>
+      @endif
+    </h4></div>
     <div class="card-body">
       <div class="row">
         <div class="col-md-6">
