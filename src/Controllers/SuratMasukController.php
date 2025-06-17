@@ -207,6 +207,14 @@ class SuratMasukController extends Controller  implements HasMiddleware
     }
     public function disposisi(Request $request, Arsip $arsip)
     {
+
+        if($request->perbarui_dipsosisi && earsip_user()->is_kadis()){
+            $arsip->update([
+                'disposisi_pada'=>null,
+            ]);
+            $arsip->disposisis()->delete();
+            return redirect(earsip_route('surat-masuk.show', $arsip->id))->with('success', 'Disposisi berhasil diperbarui');
+        }
         if($request->cetak_disposisi){
             $file = $this->arsip_utama($request,$arsip->id);
             $arsip->update([
@@ -499,8 +507,8 @@ class SuratMasukController extends Controller  implements HasMiddleware
                         $btn .= '<a href="'. $arsip->disposisi_pdf.'" class="btn btn-md btn-success fa fa-download"> </a>';
                     }
                 $btn .= '<a href="' . earsip_route('surat-masuk.show', $row->id) . '" class="btn btn-md btn-primary fa fa-eye"></a>';
-                $btn .= earsip_user()->is_operator() == 'OPERATOR' ? '<a href="' . earsip_route('surat-masuk.edit', $row->id) . '" class="btn btn-md btn-warning fa fa-edit"></a>' : null;
-                $btn .= earsip_user()->is_operator() == 'OPERATOR' && !$row->sudah_paraf() ? '<a href="'.earsip_route('surat-masuk.destroy',$row->id).'" onclick="return confirm(\'Anda yakin untuk menghapus ?\')" class="btn btn-md btn-danger fa fa-trash-o"></a>' : null;
+                $btn .= $user->is_kasubag() || $user->is_operator() ? '<a href="' . earsip_route('surat-masuk.edit', $row->id) . '" class="btn btn-md btn-warning fa fa-edit"></a>' : null;
+                $btn .= $user->is_kasubag() || $user->is_operator()  ? '<a href="'.earsip_route('surat-masuk.destroy',$row->id).'" onclick="return confirm(\'Anda yakin untuk menghapus ?\')" class="btn btn-md btn-danger fa fa-trash-o"></a>' : null;
                 $btn .= '</div>';
                 return $btn;
             })
@@ -508,8 +516,8 @@ class SuratMasukController extends Controller  implements HasMiddleware
             ->toJson();
     }
     public function destroy(Arsip $arsip){
-        if(earsip_user()->is_operator()){
-            $arsip->forceDelete();
+        if(earsip_user()->is_operator() || earsip_user()->is_kasubag()){
+            $arsip->delete();
             return redirect(earsip_route('surat-masuk.index'))->with('success','Surat berhasil dihapus');
         }
         abort(403,'Akses dibatasi');

@@ -345,6 +345,9 @@
              <li>{{ $data->catatan ?? '-' }}</li>
               </ul>
               </p>
+              <p>
+                <button name="perbarui_dipsosisi" value="true" class="btn btn-sm btn-warning" onclick="return confirm('Anda yakin untuk disposisi ulang?')"> <i class="fa fa-edit"></i>  Disposisi Ulang</button>
+              </p>
             @else
             <h6 class="card-title">Teruskan surat ini kepada :</h6>
 

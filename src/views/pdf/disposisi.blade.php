@@ -31,9 +31,9 @@
         <td style="width:50%;border-bottom:none;vertical-align: top;padding-left:5px">Surat dari : {{ $data->surat_dari }}<br>
             No. Surat : {{ $data->nomor_surat }}
             <br>
-            Tgl. Surat : {{ $data->tanggal_surat->format('d F Y') }}
+            Tgl. Surat : {{ $data->tanggal_surat->translatedFormat('d F Y') }}
         </td>
-        <td style="width:50%;border-bottom:none;vertical-align: top;padding:0 0 5px 5px">Diterima Tgl :  {{ $data->tanggal_terima->format('d F Y') }}
+        <td style="width:50%;border-bottom:none;vertical-align: top;padding:0 0 5px 5px">Diterima Tgl :  {{ $data->tanggal_terima->translatedFormat('d F Y') }}
             <br>
             No. Agenda : {{ $data->nomor_agenda }}<br>
             Sifat : <br>
