@@ -21,6 +21,7 @@ return new class extends Migration
             $table->foreignUuid('whatsapp_pejabat')->nullablle();
             $table->dateTime('dibaca_pada')->nullable();
             $table->string('catatan')->nullable();
+            $table->string('disposisi_pdf')->nullable();
             $table->string('balasan')->nullable();
             $table->dateTime('dibalas_pada')->nullable();
             $table->dateTime('diarsip_pada')->nullable();

@@ -1,18 +1,17 @@
 <?php
 
 namespace Leazycms\EArsip\Controllers;
-
 use setasign\Fpdi\Fpdi;
 use Illuminate\Http\Request;
 use Leazycms\FLC\Models\File;
 use Illuminate\Http\UploadedFile;
 use Leazycms\EArsip\Models\Arsip;
 use Leazycms\EArsip\Jobs\WaSender;
-use Illuminate\Support\Facades\Log;
 use Leazycms\EArsip\Models\Pejabat;
+use Leazycms\EArsip\Models\Disposisi;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Http;
 use Barryvdh\DomPDF\Facade\Pdf as PDF;
+use Illuminate\Support\Facades\File as Filestorage;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Routing\Controllers\Middleware;
@@ -58,17 +57,100 @@ class SuratMasukController extends Controller  implements HasMiddleware
     }
 
     }
-    public function arsip_surat($request,$surat)
+
+    function storePdfPathToConvert(string $fullPdfPath): void
     {
-        $surat = Arsip::with('disposisis.pejabat')->find($surat);
+        // Tentukan direktori penyimpanan txt
+        $directory = 'pdf-path-to-convert';
+
+        // Buat nama file unik berdasarkan timestamp atau hash
+        $fileName = 'idfile_' . now()->format('Ymd_His_u') . '.txt';
+
+        // Simpan path PDF ke file txt
+        Storage::put("$directory/$fileName", $fullPdfPath);
+
+        // echo "Disimpan: storage/app/$directory/$fileName\n";
+    }
+    public function store_to_path_converter($arsip_id,$files=null){
+     
+            $folderName = 'converter-pdf/pdf-in';
+            $path = storage_path("app/{$folderName}");
+            if (!Filestorage::exists($path)) {
+                Filestorage::makeDirectory($path, 0755, true);
+            }
+
+        $listPath = $path . '/' . $arsip_id;
+        file_put_contents($listPath, implode(' ', array_map('escapeshellarg', $files)));
+        
+
+    }
+
+    public  function arsip_utama($request,$arsip){
+        $surat = Arsip::with('disposisis.pejabat')->find($arsip);
+        $penerima = Pejabat::select('id', 'jabatan')->wherePenerimaDisposisi(1)->orderBy('jabatan', 'desc')->get();
+
+        $pdf = PDF::loadView('earsip::pdf.disposisis', [
+            'data' => $surat,
+            'penerima' => $penerima
+        ]);
+        try {
+            $tempDir = storage_path('app/temp');
+            if (!is_dir($tempDir)) {
+                mkdir($tempDir, 0777, true);
+            }
+            $pdfdisposisi = $tempDir . '/arsip-disposisi-' . $surat->id . '.pdf';
+            $filesurat = Storage::disk('local')->path(File::whereFileName(basename($surat->file_surat))->first()?->file_path);
+            file_put_contents($pdfdisposisi, $pdf->output());
+
+            $pdfString = $this->merge_pdf($pdfdisposisi, $filesurat);
+            $tmpPath = tempnam(sys_get_temp_dir(), 'pdf_');
+            file_put_contents($tmpPath, $pdfString);
+
+            // 3. Buat instance UploadedFile dari file temp
+            $uploaded = new UploadedFile(
+                $tmpPath,
+                'arsip-' . $surat->id . '.pdf',
+                'application/pdf',
+                null,
+                true// Set to true so it's treated as a test file
+            );
+            $newRequest = Request::createFromBase(new SymfonyRequest(
+                $request->query->all(),
+                $request->request->all(),
+                $request->attributes->all(),
+                $request->cookies->all(),
+                ['surat' => $uploaded], // ⬅️ DI SINI FILE DITAMBAHKAN
+                $request->server->all(),
+                $request->getContent()
+            ));
+            $fname = $surat->addFile([
+                'file' => $newRequest->file('surat'),
+                'mime_type' => ['application/pdf'],
+                'purpose' => 'Arsip Dispoisi PDF ' . $surat->id
+            ]);
+
+            $surat->update([
+                'file_arsip' => $fname
+            ]);
+            unlink($pdfdisposisi);
+            return url($fname);
+        } catch (\Exception $e) {
+            return back()->with('warning', 'Proses gagal ' . $e->getMessage());
+        }
+
+    }
+    public function arsip_surat($request,$surat,$disposisi_id)
+    {
+        $surat = Arsip::withWhereHas('disposisis', function ($q) use ($disposisi_id) {
+            $q->where('id', '=', $disposisi_id)->with('pejabat');
+        });
         $penerima = Pejabat::select('id','jabatan')->wherePenerimaDisposisi(1)->orderBy('jabatan','desc')->get();
-       $pdf = PDF::loadView('earsip::pdf.disposisi',[
+        $disposisi = Disposisi::find($disposisi_id);
+        $pdf = PDF::loadView('earsip::pdf.disposisi',[
             'data' => $surat,
             'penerima'=>$penerima
         ]);
         try{
-
-
         $tempDir = storage_path('app/temp');
         if (!is_dir($tempDir)) {
             mkdir($tempDir, 0777, true);
@@ -98,14 +180,14 @@ class SuratMasukController extends Controller  implements HasMiddleware
             $request->server->all(),
             $request->getContent()
         ));
-        $fname = $surat->addFile([
+        $fname = $disposisi->addFile([
             'file' => $newRequest->file('surat'),
             'mime_type'=>['application/pdf'],
-            'purpose'=>'Arsip Surat '.$surat->id
+            'purpose'=>'Disposisi Arsip PDF '.$disposisi_id
         ]);
 
-        $surat->update([
-            'file_arsip'=>$fname
+        $disposisi->update([
+            'disposisi_pdf'=>$fname
         ]);
         unlink($pdfdisposisi);
         return url($fname);
@@ -136,7 +218,8 @@ class SuratMasukController extends Controller  implements HasMiddleware
                 'teruskan_ke_whatsapp_pada' => now(),
                 'catatan' => strip_tags($request->pesan),
             ]);
-           $filearsip =  $this->arsip_surat($request,$arsip->id);
+           $filearsip =  $this->arsip_surat($request,$arsip->id,$d->id);
+
             WaSender::dispatch([
                 'to' => $pejabat->nohp,
                 'text' => "Disposisi surat masuk untuk ditindak lanjuti, klik tautan berikut untuk mengunduh surat :\n". $filearsip,
@@ -260,8 +343,11 @@ class SuratMasukController extends Controller  implements HasMiddleware
                 'mime_type' => ['application/pdf'],
                 'purpose' => 'file-surat-' . $data->id,
             ]);
+
             $data->update(['file_surat' => $fname]);
             if (!empty($fname)) {
+                $pdfifle = File::whereFileName(basename($fname))->first()->file_path;
+                $this->storePdfPathToConvert(Storage::path($pdfifle));
 
                 $pejabat = Pejabat::select('user_id', 'nohp')->whereAliasJabatan('KASUBAGUMUM')->first();
                 $notif = $data->addNotification([
