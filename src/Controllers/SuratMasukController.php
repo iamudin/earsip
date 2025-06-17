@@ -212,7 +212,7 @@ class SuratMasukController extends Controller  implements HasMiddleware
             $arsip->update([
                 'disposisi_pada'=>null,
             ]);
-            $arsip->disposisis()->delete();
+            $arsip->disposisis()->forceDelete();
             return redirect(earsip_route('surat-masuk.show', $arsip->id))->with('success', 'Disposisi berhasil diperbarui');
         }
         if($request->cetak_disposisi){
