@@ -76,13 +76,13 @@
         <td style="width:50%;padding:0 0 10px 5px;vertical-align: top">Diteruskan kepada Sdr :
             <ul class="checklist" style="margin:0;padding:0 0 0 10px;list-style:none">
                 @foreach($penerima as $row)
-                <li>
-                    @if(in_array($row->id,$data->disposisis->pluck('pejabat_id')->toArray()))
-                    <span style="border:1px solid #000;  font-family: DejaVu Sans, sans-serif;">✔</span>
-                    @else 
-                    <span style="border:1px solid #000;  font-family: DejaVu Sans, sans-serif;color:#fff">✔</span>
-                    @endif
-                    {{ $row->jabatan }} </li>
+                    <li>
+                        @if($data->disposisis && in_array($row->id,$data->disposisis->pluck('pejabat_id')->toArray()))
+                        <span style="border:1px solid #000;  font-family: DejaVu Sans, sans-serif;">✔</span>
+                        @else 
+                        <span style="border:1px solid #000;  font-family: DejaVu Sans, sans-serif;color:#fff">✔</span>
+                        @endif
+                        {{ $row->jabatan }} </li>
                 @endforeach
             </ul>
         </td>
@@ -90,13 +90,13 @@
             Dengan hormat harap :
             <ul class="checklist" style="margin:0;padding:0 0 0 10px;list-style:none">
                 @foreach(['Tanggapan dan Saran','Proses Lebih lanjut','Koordinasi / Konfirmasikan'] as $row)
-                <li>
-                    @if(in_array($row,$data->harapan))
-                    <span style="border:1px solid #000;  font-family: DejaVu Sans, sans-serif;">✔</span>
-                    @else 
-                    <span style="border:1px solid #000;  font-family: DejaVu Sans, sans-serif;color:#fff">✔</span>
-                    @endif
-                    {{ $row }} </li>
+                    <li>
+                        @if($data->harapan && in_array($row,$data->harapan))
+                        <span style="border:1px solid #000;  font-family: DejaVu Sans, sans-serif;">✔</span>
+                        @else 
+                        <span style="border:1px solid #000;  font-family: DejaVu Sans, sans-serif;color:#fff">✔</span>
+                        @endif
+                        {{ $row }} </li>
                 @endforeach
             </ul>
         </td>

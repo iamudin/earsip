@@ -207,7 +207,7 @@ class SuratMasukController extends Controller  implements HasMiddleware
     }
     public function disposisi(Request $request, Arsip $arsip)
     {
-
+//no sekretaris 6281275012416
         if($request->perbarui_dipsosisi && earsip_user()->is_kadis()){
             $arsip->update([
                 'disposisi_pada'=>null,
