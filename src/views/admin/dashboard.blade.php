@@ -12,7 +12,7 @@
 
 @else
 
-<div class="row">
+
 
 
 @forelse(notifications()->get_unread_notifications() as $row)
@@ -33,7 +33,6 @@
   <div class="alert alert-warning"><h3> <i class="fa fa-warning"></i> Beluma ada tugas</h3></div>
 </div>
 @endforelse
-</div>
 
 @endif
 </div>
