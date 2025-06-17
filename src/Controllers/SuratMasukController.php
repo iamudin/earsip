@@ -143,7 +143,7 @@ class SuratMasukController extends Controller  implements HasMiddleware
     {
         $surat = Arsip::withWhereHas('disposisis', function ($q) use ($disposisi_id) {
             $q->where('id', '=', $disposisi_id)->with('pejabat');
-        });
+        })->find($surat);
         $penerima = Pejabat::select('id','jabatan')->wherePenerimaDisposisi(1)->orderBy('jabatan','desc')->get();
         $disposisi = Disposisi::find($disposisi_id);
         $pdf = PDF::loadView('earsip::pdf.disposisi',[
