@@ -221,7 +221,7 @@ class SuratMasukController extends Controller  implements HasMiddleware
                 'file_arsip' => $file,
             ]);
             $f = File::whereFileName(basename($file))->first();
-            return response()->download(Storage::path($f->file_path), 'disposisi-'.$arsip->nomor_surat.'.pdf', [
+            return response()->download(Storage::path($f->file_path), 'disposisi-'.str($arsip->nomor_surat)->slug().'.pdf', [
                 'Content-Type' => 'application/pdf',
             ]);
         }
