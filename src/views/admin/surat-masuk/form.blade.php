@@ -46,7 +46,7 @@
                                 <div class="col-md-9">
                                     <input name="tanggal_surat" class="form-control form-control-sm" type="date"
                                         placeholder="Enter email address"
-                                        value="{{ $data->tanggal_surat ? date('Y-m-d', strtotime($data->tanggal_surat)) : date('Y-m-d') }}"
+                                        value="{{ $data && $data->tanggal_surat ? date('Y-m-d', strtotime($data->tanggal_surat)) : date('Y-m-d') }}"
                                         required
                                         >
                                 </div>
@@ -70,7 +70,7 @@
                                 <div class="col-md-9">
                                     <input required class="form-control col-md-12" name="tanggal_terima" type="date"
                                         placeholder="Enter email address"
-                                        value="{{ $data->tanggal_terima ? date('Y-m-d', strtotime($data->tanggal_terima)) : date('Y-m-d') }}"
+                                        value="{{ $data && $data->tanggal_terima ? date('Y-m-d', strtotime($data->tanggal_terima)) : date('Y-m-d') }}"
                                         >
                                 </div>
                             </div>
