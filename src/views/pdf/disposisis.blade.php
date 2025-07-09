@@ -2,7 +2,7 @@
     <img src="{{public_path('logokab.png')}}" style="float:left;height:70px;margin-right:10px;">
 
     <h3 style="margin-top:10;padding-top:0;margin-bottom:30px">
-        PEMERINTAH KABUPATEN BENGdKALIS<br>
+        PEMERINTAH KABUPATEN BENGKALIS<br>
         DINAS PERKEBUNAN<br>
     </h3>
     <hr style="border-top: 1px solid #000;margin:0;padding:0">
