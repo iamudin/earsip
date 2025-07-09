@@ -64,7 +64,7 @@ public function index(){
             request('tanggal_mulai',date('Y-m-d')),
             request('tanggal_akhir',date('Y-m-d'))
         );
-        if(request('cetak_rekap') && request('tanggal_mulai') && request('tanggal_akhir')){
+        if(request('cetak_rekap') && request('tanggal_mulai')){
         $query = Arsip::with('user.pejabat', 'disposisis.pejabat')->orderBy('nomor_agenda')->get();
         $html = View::make('earsip::pdf.rekap', [
                 'rekap' => $query,

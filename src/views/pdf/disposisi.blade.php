@@ -1,8 +1,10 @@
 <center>
-    <H2 style="margin-bottom:10px">
-        PEMERINTAH KABUPATEN BENGKALIS<br>
+    <img src="{{public_path('logokab.png')}}" style="float:left;height:70px;margin-right:10px;">
+    
+    <h3 style="margin-top:10;padding-top:0;margin-bottom:30px">
+        PEMERINTAH KABUPATEN BENGdKALIS<br>
         DINAS PERKEBUNAN<br>
-    </H2>
+    </h3>
     <hr style="border-top: 1px solid #000;margin:0;padding:0">
     <hr style="border-bottom: 2px solid #000;margin:0;padding:0">
 </center>
@@ -37,8 +39,8 @@
             <br>
             No. Agenda : {{ $data->nomor_agenda }}<br>
             Sifat : <br>
-            @foreach(['Segera','Sangat Segera','Rahasia'] as $sifat)
-            @if(str($sifat)->upper()==$data->sifat)
+            @foreach(['Segera', 'Sangat Segera', 'Rahasia'] as $sifat)
+            @if(str($sifat)->upper() == $data->sifat)
             <span style="border:1px solid #000;  font-family: DejaVu Sans, sans-serif;">✔</span>
             @else 
             <span style="border:1px solid #000;  font-family: DejaVu Sans, sans-serif;color:#fff">✔</span>
@@ -77,7 +79,7 @@
             <ul class="checklist" style="margin:0;padding:0 0 0 10px;list-style:none">
                 @foreach($penerima as $row)
                 <li>
-                    @if(in_array($row->id,$data->disposisis->pluck('pejabat_id')->toArray()))
+                    @if(in_array($row->id, $data->disposisis->pluck('pejabat_id')->toArray()))
                     <span style="border:1px solid #000;  font-family: DejaVu Sans, sans-serif;">✔</span>
                     @else 
                     <span style="border:1px solid #000;  font-family: DejaVu Sans, sans-serif;color:#fff">✔</span>
@@ -89,9 +91,9 @@
         <td style="padding:0 0 10px 5px">
             Dengan hormat harap :
             <ul class="checklist" style="margin:0;padding:0 0 0 10px;list-style:none">
-                @foreach(['Tanggapan dan Saran','Proses Lebih lanjut','Koordinasi / Konfirmasikan'] as $row)
+                @foreach(['Tanggapan dan Saran', 'Proses Lebih lanjut', 'Koordinasi / Konfirmasikan'] as $row)
                 <li>
-                    @if(in_array($row,$data->harapan))
+                    @if(in_array($row, $data->harapan))
                     <span style="border:1px solid #000;  font-family: DejaVu Sans, sans-serif;">✔</span>
                     @else 
                     <span style="border:1px solid #000;  font-family: DejaVu Sans, sans-serif;color:#fff">✔</span>
