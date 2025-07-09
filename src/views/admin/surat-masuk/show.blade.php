@@ -328,9 +328,9 @@
       <ul>
       @foreach($data->disposisis as $row)
       <li>
-      <strong>{{ $row->pejabat->jabatan }}</strong>
+      <strong>{{ $row->pejabat->nama }} - {{ $row->pejabat->jabatan }}</strong>
       </li>
-      @endforeach
+    @endforeach
       </ul>
       </p>
       <p class="card-text mb-1">Dengan harapan :
@@ -348,7 +348,7 @@
       <p>
       <button name="perbarui_dipsosisi" value="true" class="btn btn-sm btn-warning" onclick="return confirm('Anda yakin untuk disposisi ulang?')"> <i class="fa fa-edit"></i>  Disposisi Ulang</button>
       </p>
-      @else
+    @else
       <h6 class="card-title">Teruskan surat ini kepada :</h6>
 
       <div class="form-group ">
@@ -356,10 +356,10 @@
       <div class="animated-checkbox">
       <label>
       <input  type="checkbox" name="pejabat_id[]" value="{{ $row->id }}">
-      <span class="label-text">{{ $row->jabatan }}</span>
+      <span class="label-text">{{ $row->nama }} - {{ $row->jabatan }}</span>
       </label>
       </div>
-      @endforeach
+    @endforeach
       </div>
       <h6 class="card-title">Dengan Hormat harap :</h6>
 
@@ -380,10 +380,10 @@
       <button name="kadis_meneruskan" value="1" class="btn btn-sm btn-primary">
       Proses dipsosisi <i class="fa fa-mail-forward"></i>
       </button>
-      @endif
+    @endif
 
       </div>
-      @endif
+    @endif
     </div>
     </div>
     </div>
