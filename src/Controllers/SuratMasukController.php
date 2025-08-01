@@ -278,7 +278,7 @@ class SuratMasukController extends Controller  implements HasMiddleware
             $request->validate([
                 'pejabat_id' => 'array|required',
                 'harapan' => 'array|required',
-                'catatan' => 'string|max:200|nullable',
+                'catatan' => 'string|nullable',
             ], [
                 'pejabat_id.required' => 'Silahkan ceklis pejabat yang ingin diteruskan',
                 'harapan.required' => 'Silahkan ceklis salah satu harapan dipsosisi',
