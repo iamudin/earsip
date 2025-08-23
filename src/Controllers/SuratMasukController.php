@@ -237,11 +237,20 @@ class SuratMasukController extends Controller  implements HasMiddleware
             ]);
            $filearsip =  $this->arsip_surat($request,$arsip->id,$d->id);
 
+            // WaSender::dispatch([
+            //     'to' => $pejabat->nohp,
+            //     'text' => "Disposisi surat masuk untuk ditindak lanjuti, klik tautan berikut untuk mengunduh surat :\n". $filearsip,
+            // ]);
+            if(is_local()){
+                $filearsip = "https://disbun.bengkaliskab.go.id/media/940b37e73902286ce666acd667541dad-ansm.pdf";
+            }
             WaSender::dispatch([
                 'to' => $pejabat->nohp,
-                'text' => "Disposisi surat masuk untuk ditindak lanjuti, klik tautan berikut untuk mengunduh surat :\n". $filearsip,
+                'document_name'=>basename($filearsip),
+                'document_url'=>$filearsip,
+                'type'=>'file',
+                'text' => 'Disposisi surat masuk untuk ditindak lanjuti',
             ]);
-
             return redirect(earsip_route('surat-masuk.index'))->with('success', 'Surat berhasil diteruskan ke ke '.$pejabat->jabatan);
 
 

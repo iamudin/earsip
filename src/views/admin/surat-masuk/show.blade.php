@@ -306,7 +306,7 @@
       <select name="pejabat_id" id="" class="form-control form-control-sm form-control-select">
       <option value="">-- Pilih Staff --</option>
       @foreach($staff as $row)
-      <option value="{{ $row->id }}">{{ $row->nama }}<br>{{ $row->jabatan }}</option>
+      <option value="{{ $row->id }}">{{ $row->nama }} - ({{ $row->jabatan }})</option>
       @endforeach
       </select>
        </div>
