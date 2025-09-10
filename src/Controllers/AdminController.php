@@ -65,7 +65,9 @@ public function index(){
             request('tanggal_akhir',date('Y-m-d'))
         );
         if(request('cetak_rekap') && request('tanggal_mulai')){
-        $query = Arsip::with('user.pejabat', 'disposisis.pejabat')->orderBy('nomor_agenda')->get();
+        $query = Arsip::with('user.pejabat', 'disposisis.pejabat')
+        ->whereBetween('tanggal_terima', [request('tanggal_mulai',date('Y-m-d')),request('tanggal_akhir',date('Y-m-d'))])
+        ->orderBy('nomor_agenda')->get();
         $html = View::make('earsip::pdf.rekap', [
                 'rekap' => $query,
                 'periode' => $data['periode'],
