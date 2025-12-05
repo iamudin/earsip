@@ -13,12 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('pejabats', function (Blueprint $table) {
-            if (!Schema::hasColumn('pejabats', 'atasan_id')) {
-                    $table->foreignUuid('atasan_id')->nullable();
-
-            }
-            });
+        Schema::table('arsips', function (Blueprint $table) {
+            $table->foreignUUId('kadis_id')->nullable();
+        });
 
     }
     public function down()

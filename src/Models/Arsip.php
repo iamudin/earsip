@@ -25,6 +25,7 @@ class Arsip extends Model
         'catatan',
         'paraf_kasubagumum_pada',
         'diteruskan_ke_kadis',
+        'kadis_id',
         'disposisi_pada',
         'user_id'
         ];
@@ -52,6 +53,10 @@ class Arsip extends Model
     }
     public function user(){
         return $this->belongsTo(User::class);
+    }
+    public function kadis()
+    {
+        return $this->belongsTo(Pejabat::class, 'kadis_id');
     }
      public function disposisis(){
         return $this->hasMany(Disposisi::class);

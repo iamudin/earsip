@@ -86,7 +86,7 @@ class SuratMasukController extends Controller  implements HasMiddleware
     }
 
     public  function arsip_utama($request,$arsip){
-        $surat = Arsip::with('disposisis.pejabat')->find($arsip);
+        $surat = Arsip::with('disposisis.pejabat','kadis')->find($arsip);
         $penerima = Pejabat::select('id', 'jabatan')->wherePenerimaDisposisi(1)->orderBy('jabatan', 'desc')->get();
 
         $pdf = PDF::loadView('earsip::pdf.disposisis', [
@@ -142,7 +142,7 @@ class SuratMasukController extends Controller  implements HasMiddleware
     public function arsip_surat($request,$surat,$disposisi_id)
     {
         $surat = Arsip::withWhereHas('disposisis', function ($q) use ($disposisi_id) {
-            $q->where('id', '=', $disposisi_id)->with('pejabat');
+            $q->where('id', '=', $disposisi_id)->with('pejabat','kadis');
         })->find($surat);
         $penerima = Pejabat::select('id','jabatan')->wherePenerimaDisposisi(1)->orderBy('jabatan','desc')->get();
         $disposisi = Disposisi::find($disposisi_id);
@@ -151,6 +151,7 @@ class SuratMasukController extends Controller  implements HasMiddleware
             'penerima'=>$penerima
         ]);
         try{
+            return $pdf->stream('dffd.pdf');
         $tempDir = storage_path('app/temp');
         if (!is_dir($tempDir)) {
             mkdir($tempDir, 0777, true);
@@ -257,11 +258,17 @@ class SuratMasukController extends Controller  implements HasMiddleware
         }
 
         if ($request->paraf_kasubag && $request->teruskan_ke_kadis) {
+            $pejabat = Pejabat::whereHas('user',function($q){
+                $q->whereStatus('active');
+            })->select('user_id', 'nohp','id')->whereAliasJabatan('KADIS')->first();
+            if(empty($pejabat)){
+                return back()->with('warning','Data Kepala Dinas tidak ditemukan atau user belum diaktifkan');
+            }
             $arsip->update([
                 'paraf_kasubagumum_pada' => now(),
-                'diteruskan_ke_kadis' => now()
+                'diteruskan_ke_kadis' => now(),
+                'kadis_id'=>$pejabat->id,
             ]);
-            $pejabat = Pejabat::select('user_id', 'nohp')->whereAliasJabatan('KADIS')->first();
 
             $notif = $arsip->addNotification([
                 'to_user' => $pejabat->user_id,
@@ -339,7 +346,9 @@ class SuratMasukController extends Controller  implements HasMiddleware
         }
 
         if(earsip_user()->is_kabid()){
-            $staff = Pejabat::whereAtasanId(earsip_user()->pejabat->id)->get();
+            $staff = Pejabat::whereAtasanId(earsip_user()->pejabat->id)->whereHas('user', function ($u) {
+                $u->whereStatus('active');
+            })->get();
         }
         $surat->notificationCleaner();
 
@@ -347,7 +356,9 @@ class SuratMasukController extends Controller  implements HasMiddleware
             'earsip::admin.surat-masuk.show',
             [
                 'data' => $surat,
-                'pejabat' => Pejabat::wherePenerimaDisposisi(1)->whereNotIn('alias_jabatan', ['OPERATOR', 'KASUBAG', 'KADIS'])->orderBy('alias_jabatan', 'desc')->get(),
+                'pejabat' => Pejabat::wherePenerimaDisposisi(1)->whereNotIn('alias_jabatan', ['OPERATOR', 'KASUBAG', 'KADIS'])->orderBy('alias_jabatan', 'desc')->whereHas('user',function($u){
+                    $u->whereStatus('active');
+                })->get(),
                 'staff'=> $staff ?? [],
             ]
         );
