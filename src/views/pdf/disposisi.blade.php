@@ -128,7 +128,7 @@
                 @endphp
                 {{$data->kadis->nama}}<br>
                 {{ $data->kadis->pangkat_golongan }}<br>
-                {{$data->kadis->nip}}
+                NIP. {{$data->kadis->nip}}
             </div>
         </td>
     </tr>
