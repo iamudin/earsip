@@ -123,9 +123,7 @@
                 <br>
                 <br>
                 <br>
-            @php 
-                $data = $data->load('kadis');
-            @endphp
+        
             {{$data->kadis->nama}}<br>
                 {{ $data->kadis->pangkat_golongan }}<br>
                    NIP. {{$data->kadis->nip}}
