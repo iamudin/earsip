@@ -151,7 +151,6 @@ class SuratMasukController extends Controller  implements HasMiddleware
             'penerima'=>$penerima
         ]);
         try{
-            return $pdf->stream('dffd.pdf');
         $tempDir = storage_path('app/temp');
         if (!is_dir($tempDir)) {
             mkdir($tempDir, 0777, true);
