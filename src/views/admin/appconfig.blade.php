@@ -6,12 +6,10 @@
                 <h3 style="font-weight:normal">
                     <i class="fa fa-gears" aria-hidden="true"></i> Pengaturan
                     <div class="btn-group pull-right">
-            @if(!app()->configurationIsCached())
 
                            <button type="button" onclick="$('.btn-submit').click()" class="btn btn-primary btn-sm">
                     <i class="fa fa-save"></i> Simpan
                 </button>
-                @endif
                         <a href="{{ route('panel.dashboard') }}" class="btn btn-danger btn-sm">
                             <i class="fa fa-undo" aria-hidden="true"></i> Kembali
                         </a>
