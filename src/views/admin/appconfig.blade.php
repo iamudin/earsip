@@ -24,11 +24,7 @@
 
          <div class="col-lg-12">
              @include('cms::backend.layout.error')
-            @if(app()->configurationIsCached())
-                 <div class="alert alert-danger">
-                            <i class="fa fa-info"></i> Pengaturan tidak dapat diubah karena cache config aktif, silahkan nonaktifkan <a href="{{route('cache-manager')}}" class="">disini.</a>
-                            </div>
-            @else
+     
             <form method="POST" action="{{ route('panel.earsip.pengaturan.index') }}" class="form-profile" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
@@ -196,7 +192,6 @@
                 @endif
                 <button class="type d-none btn-submit" type="submit" ></button>
             </form>
-            @endif
          </div>
          </div>
 

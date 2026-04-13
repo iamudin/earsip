@@ -1,12 +1,13 @@
 <?php
 namespace Leazycms\EArsip\Controllers;
-use Carbon\Carbon;
-use Leazycms\EArsip\Models\Arsip;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\View;
 use Barryvdh\DomPDF\Facade\Pdf as PDF;
-use Illuminate\Routing\Controllers\Middleware;
+use Carbon\Carbon;
 use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\View;
+use Leazycms\EArsip\Models\Arsip;
 
 class AdminController extends Controller  implements HasMiddleware
 {
@@ -33,6 +34,8 @@ class AdminController extends Controller  implements HasMiddleware
                 'WA_SENDER_URL' => $data['api_url'],
                 'WA_SENDER_SESSION' => $data['api_session'],
             ]);
+
+            Artisan::call('config:cache');
             return back()->with('success','Pengaturan berhasil disimpan');
         }
         return view('earsip::admin.appconfig');

@@ -1,7 +1,6 @@
 <?php
 namespace Leazycms\EArsip;
 
-use App\Jobs\WaSender;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
@@ -11,7 +10,7 @@ class EarsipServiceProvider extends ServiceProvider
 {
     protected function registerRoutes()
     {
-        //tes
+       
         if(get_option('sub_app_enabled') && get_option('sub_app_enabled') == 'Y'){
         Route::middleware(['web','admin.earsip'])
         ->group(function () {
