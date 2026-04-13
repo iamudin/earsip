@@ -12,6 +12,7 @@ class Pejabat extends Model
     use Fileable,SoftDeletes,HasUuids;
     protected $fillable = [
         'nama',
+        'pangkat_golongan',
         'nip',
         'nohp',
         'jabatan',

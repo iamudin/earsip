@@ -123,9 +123,9 @@
                 <br>
                 <br>
                 <br>
-                MOHAMMAD AZMIR, S.Hut.T, M.Sc<br>
-                Pembina TK.I<br>
-                NIP. 19780613 199803 1 004
+                {{$data->kadis->nama}}<br>
+                {{ $data->kadis->pangkat_golongan }}<br>
+                NIP. {{$data->kadis->nip}}
             </div>
         </td>
     </tr>
