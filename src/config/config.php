@@ -34,7 +34,7 @@ return [
             'only_admin' => false,
         ],
         [
-            'name' => 'Pejabat',
+            'name' => 'Akses User',
             'route' => 'pejabat.index',
             'icon' => 'fa-user',
             'path' => 'pejabat',
