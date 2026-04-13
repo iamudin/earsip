@@ -39,7 +39,7 @@ class WaSender implements ShouldQueue
     
     function sendDocument() 
     {
-        $response = Http::post(config('earsip.api.wa_sender.url').'/message/send-document', [
+        $response = Http::withoutVerifying()->post(config('earsip.api.wa_sender.url').'/message/send-document', [
             'session' => config('earsip.api.wa_sender.session'),
             'to' => $this->data['to'],
             'text' => $this->data['text'],
@@ -53,7 +53,7 @@ class WaSender implements ShouldQueue
     }
     function sendText() 
     {
-        $response = Http::post(config('earsip.api.wa_sender.url').'/message/send-text', [
+        $response = Http::withoutVerifying()->post(config('earsip.api.wa_sender.url').'/message/send-text', [
             'session' => config('earsip.api.wa_sender.session'),
             'to' => $this->data['to'],
             'text' => $this->data['text'],
