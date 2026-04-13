@@ -64,7 +64,7 @@
                         <div class="modal-body text-center">
                             <p id="statusBadge" class="font-weight-bold text-warning">🟡 Waiting QR</p>
 
-    <div id="qrContainer"></div>
+                        <img src="" class="qrImage" alt="">
                         </div>
                   
                         <div class="modal-footer">
@@ -130,15 +130,11 @@
                             if (data.qr) {
                     
                                 setStatus('🟡 Waiting QR', 'text-warning');
-                    
-                                let qrString = data.qr.split(',')[0];
-                    
-                                QRCode.toCanvas(qrString, { width: 250 }, function (err, canvas) {
-                                    if (err) return;
-                    
-                                    qrContainer.innerHTML = '';
-                                    qrContainer.appendChild(canvas);
-                                });
+                                QRCode.toDataURL(data.qr, function (err, url) {
+
+                                    $('.qrImage').attr('src',url);
+
+});
                     
                             } else {
                     
