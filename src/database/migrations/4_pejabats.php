@@ -13,9 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('pejabats', function (Blueprint $table) {
-            $table->foreignUuid('atasan_id')->nullable();
-            });
+       Schema::table('pejabats', function (Blueprint $table) {
+    if (!Schema::hasColumn('pejabats', 'atasan_id')) {
+        $table->foreignUuid('atasan_id')
+              ->nullable()
+              ->constrained('pejabats')
+              ->nullOnDelete();
+    }
+});
 
     }
     public function down()

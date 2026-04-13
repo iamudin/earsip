@@ -1,7 +1,7 @@
-@extends('cms::backend.layout.app',['title'=>'Surat Masuk'])
+@extends('cms::backend.layout.app',['title'=>'Pejabat'])
 @section('content')
 <div class="row">
-<div class="col-lg-12"><h3 style="font-weight:normal" class="pull-left"> <i class="fa fa-envelope"></i> Surat Masuk
+<div class="col-lg-12"><h3 style="font-weight:normal" class="pull-left"> <i class="fa fa-users"></i> Pejabat
 
 </h3>
 <a href="{{ earsip_route('pejabat.create') }}" class=" btn btn-primary btn-sm pull-right"> <i class="fa fa-plus"></i> Tambah</a>

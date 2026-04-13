@@ -6,8 +6,8 @@ use Leazycms\EArsip\Controllers\PejabatController;
 
 Route::group([
     'domain' => no_http_url(config('app.url')),
-    'prefix' => admin_path().'/earsip',
-    'as'   => 'panel.earsip.',
+    'prefix' => admin_path() . '/earsip',
+    'as' => 'panel.earsip.',
 ], function () {
     Route::resource('pejabat', PejabatController::class);
     Route::post('pejabat/datatable', [PejabatController::class, 'datatable'])->name('pejabat.datatable');

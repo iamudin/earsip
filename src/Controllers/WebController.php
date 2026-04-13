@@ -6,6 +6,6 @@ use App\Http\Controllers\Controller;
 class WebController extends Controller
 {
 public function home(Request $request){
-    return to_route('login');
+    // return to_route('login');
 }
 }

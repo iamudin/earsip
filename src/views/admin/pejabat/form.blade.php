@@ -1,7 +1,7 @@
 @extends('cms::backend.layout.app',['title'=>  (str_contains(URL::full(),'edit') ? 'Edit' : 'Tambah') .' Pejabat' ])
 @section('content')
 <div class="row">
-<div class="col-lg-12"><h3 style="font-weight:normal" class="pull-left"> <i class="fa fa-user"></i> {{ str_contains(URL::full(),'edit') ? 'Edit' : 'Tambah' }} Pejabat </h3>
+<div class="col-lg-12"><h3 style="font-weight:normal" class="pull-left"> <i class="fa fa-users"></i> {{ str_contains(URL::full(),'edit') ? 'Edit' : 'Tambah' }} Pejabat </h3>
     <a href="{{ earsip_route('pejabat.index') }}" class=" btn btn-danger btn-sm pull-right"> <i class="fa fa-undo"></i> Kembali</a>
 </div>
 

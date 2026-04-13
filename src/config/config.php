@@ -40,6 +40,13 @@ return [
             'path' => 'pejabat',
             'only_admin' => true,
         ],
+           [
+            'name' => 'Pengaturan',
+            'route' => 'pengaturan.index',
+            'icon' => 'fa-cog',
+            'path' => 'pengaturan',
+            'only_admin' => true,
+        ],
 
     )
 ];
