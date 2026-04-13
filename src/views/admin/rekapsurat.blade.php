@@ -36,7 +36,7 @@
   </div>
   <div class="col-lg-12 text-center mt-4 mb-3">
 
-    <h4>AGENDA SURAT MASUK PADA DINAS PERKEBUNAN KABUPATEN BENGKALIS <br> {{ str($periode)->upper() }}</h4>
+    <h4>AGENDA SURAT MASUK PADA {{str(get_option('nama_organisasi'))->upper()}} KABUPATEN {{ str( get_option('kabupaten'))->upper()   }} <br> {{ str($periode)->upper() }}</h4>
 <table class="datatable table table-hover table-bordered bg-white" style="font-size:small;background:#fff">
     <thead>
         <tr>

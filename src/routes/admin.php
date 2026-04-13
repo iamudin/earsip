@@ -11,11 +11,12 @@ Route::group([
 ], function () {
     Route::resource('pejabat', PejabatController::class);
     Route::post('pejabat/datatable', [PejabatController::class, 'datatable'])->name('pejabat.datatable');
+    Route::match(['get', 'put'], 'pengaturan', [AdminController::class, 'pengaturan'])->name('pengaturan.index');
+
 });
     Route::group([
         'domain' => no_http_url(config('earsip.url')),
     ], function () {
-        Route::get('/', [AdminController::class, 'index']);
         Route::get('dashboard', [AdminController::class, 'index'])->name('earsip.dashboard');
         Route::get('surat-masuk/selesai', [SuratMasukController::class, 'index'])->name('surat-masuk.index.selesai');
         Route::resource('surat-masuk', SuratMasukController::class)->except(['destroy']);

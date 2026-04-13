@@ -2,8 +2,8 @@
     table td,th {border:1px solid #000}
 </style>
 <center>
-    <img src="{{public_path('logokab.png')}}" style="float:left;height:70px;margin-right:10px">
-    <h3 style="margin-top:10px;padding-top:0">AGENDA SURAT MASUK PADA DINAS PERKEBUNAN KABUPATEN BENGKALIS <br> {{str( $periode)->upper() }}</h3>
+    <img src="{{media_path(get_option('logo_organisasi'))}}" style="float:left;height:70px;margin-right:10px">
+    <h3 style="margin-top:10px;padding-top:0">AGENDA SURAT MASUK PADA {{str(get_option('nama_organisasi'))->upper()}} KABUPATEN {{ str( get_option('kabupaten'))->upper()   }}<br> PERIODE {{str( $periode)->upper() }}</h3>
 </center>
 <br>
 <table border="1" style="border-collapse: collapse;width:100%;font-size:small;border-color:#000">

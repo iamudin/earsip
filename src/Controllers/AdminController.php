@@ -17,7 +17,26 @@ class AdminController extends Controller  implements HasMiddleware
             new Middleware('auth'),
         ];
     }
+    function pengaturan(){
+        admin_only();
 
+        if(request()->isMethod('PUT')){
+            $data = request()->validate([
+                'url' => 'required|url',
+                'logo' => 'required|url',
+                'api_url' => 'required|url',
+                'api_session' => 'required|string',
+            ]);
+            rewrite_env([
+                'APP_URL_EARSIP' => $data['url'],
+                'APP_LOGO_EARSIP' => $data['logo'],
+                'WA_SENDER_URL' => $data['api_url'],
+                'WA_SENDER_SESSION' => $data['api_session'],
+            ]);
+            return back()->with('success','Pengaturan berhasil disimpan');
+        }
+        return view('earsip::admin.appconfig');
+    }
     function judulPeriode($tanggalMulai, $tanggalAkhir)
     {
         Carbon::setLocale('id');

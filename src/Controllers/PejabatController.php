@@ -23,6 +23,13 @@ class PejabatController extends Controller  implements HasMiddleware
     public function update(Request $request,Pejabat $pejabat)
     {
         abort_if(!auth()->user()->isAdmin(), 403);
+        $request->validate([
+            'nip'=>'required',
+            'nama'=>'required',
+            'email'=>'required',
+            'username'=>'required',
+            'jabatan'=>'required',
+        ]);
         $pejabat->update(array_merge($request->all(),['penerima_disposisi'=>$request->penerima_disposisi ?? 0]));
         $pejabat->user()->update([
             'username'=>$request->username,
@@ -45,6 +52,13 @@ class PejabatController extends Controller  implements HasMiddleware
     public function store(Request $request)
     {
         abort_if(!auth()->user()->isAdmin(), 403);
+        $request->validate([
+            'nip'=>'required',
+            'nama'=>'required',
+            'email'=>'required',
+            'username'=>'required',
+            'jabatan'=>'required',
+        ]);
         $user = User::create([
             'username'=>$request->username,
             'password'=>bcrypt($request->password),

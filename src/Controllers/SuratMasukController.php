@@ -386,6 +386,9 @@ class SuratMasukController extends Controller  implements HasMiddleware
                 $this->storePdfPathToConvert(Storage::path($pdfifle));
 
                 $pejabat = Pejabat::select('user_id', 'nohp')->whereAliasJabatan('KASUBAGUMUM')->first();
+                if(empty($pejabat)){
+                    return back()->with('warning','Belum bisa input surat, Kasubag Umum belum tersedia');
+                }
                 $notif = $data->addNotification([
                     'to_user' => $pejabat->user_id,
                     'title' => 'Surat Baru NO. ' . $request->nomor_surat,

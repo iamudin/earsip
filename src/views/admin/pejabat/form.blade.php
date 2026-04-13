@@ -6,6 +6,7 @@
 </div>
 
 <div class="col-lg-12 mt-3">
+    @include('cms::backend.layout.error')
 <form action="{{ isset($data) ? earsip_route('pejabat.update',$data->id) : earsip_route('pejabat.store')}}" method="post" class="form" enctype="multipart/form-data">
     @if(isset($data))
     @method('PUT')
@@ -18,7 +19,18 @@
         <small for="">Jabatan</small>
         <input  type="text" class="form-control form-control-sm " value="{{ $data->jabatan ?? null }}"  name="jabatan">
         <small for="">Nohp ( WA Aktif)</small>
-        <input  type="text" class="form-control form-control-sm " value="{{ $data->nohp ?? null }}"  name="nohp">
+        <input 
+    type="text" 
+    name="nohp" 
+    class="form-control form-control-sm" 
+    placeholder="628xxxxxxxxxx"
+    pattern="62[0-9]{9,12}"
+    minlength="11"
+    maxlength="12"
+    value="{{ $data->nohp ?? null }}"
+    required
+    onkeyup="this.value = this.value.replace(/[^0-9]/g, '')"
+>
         <small for="">Peran</small><br>
        @foreach(['OPERATOR','KASUBAGUMUM','KADIS','SEKRETARIS','KABID','STAFF'] as $row)
         <input  type="radio" value="{{ $row }}"  name="alias_jabatan" {{ $data && $data->alias_jabatan == $row ? 'checked' : '' }}> {{ $row }} <br>
