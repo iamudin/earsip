@@ -304,11 +304,10 @@ class SuratMasukController extends Controller  implements HasMiddleware
                 'disposisi_pada' => now(),
             ]);
             $pejabat = Pejabat::whereIn('id', $request->pejabat_id)->get();
-            foreach ($request->pejabat_id as $row) {
-                $dp = $pejabat->where('id', $row)->first();
+            foreach ($pejabat as $row) {
 
                 $notif = $arsip->addNotification([
-                    'to_user' => $dp->user_id,
+                    'to_user' => $row->user_id,
                     'title' => 'Surat Baru NO. ' . $arsip->nomor_surat,
                     'message' => 'Ada surat Terbaru untuk anda',
                     'url' => earsip_route('surat-masuk.show', $arsip->id),
@@ -318,7 +317,7 @@ class SuratMasukController extends Controller  implements HasMiddleware
                     'pejabat_id' => $row,
                 ]);
                 WaSender::dispatch([
-                    'to' => $dp->nohp,
+                    'to' => $row->nohp,
                     'text' => "Disposisi Kepala Dinas surat masuk dari ".$arsip->surat_dari.".\n Klik tautan berikut untuk melihat.\n" . $notif,
                 ]);
             }
