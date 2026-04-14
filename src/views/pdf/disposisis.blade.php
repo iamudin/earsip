@@ -3,7 +3,7 @@
 
     <h3 style="margin-top:10;padding-top:0;margin-bottom:30px">
         PEMERINTAH KABUPATEN BENGKALIS<br>
-        KEPALA {{ str(get_option('nama_organisasi'))->upper() }}<br>KABUPATEN {{ str(get_option('kabupaten'))->upper() }}<br>
+        {{ str(get_option('nama_organisasi'))->upper() }}<br>KABUPATEN {{ str(get_option('kabupaten'))->upper() }}
     </h3>
     <hr style="border-top: 1px solid #000;margin:0;padding:0">
     <hr style="border-bottom: 2px solid #000;margin:0;padding:0">
@@ -78,13 +78,13 @@
         <td style="width:50%;padding:0 0 10px 5px;vertical-align: top">Diteruskan kepada Sdr :
             <ul class="checklist" style="margin:0;padding:0 0 0 10px;list-style:none">
                 @foreach($penerima as $row)
-                    <li>
-                        @if($data->disposisis && in_array($row->id, $data->disposisis->pluck('pejabat_id')->toArray()))
-                        <span style="border:1px solid #000;  font-family: DejaVu Sans, sans-serif;">✔</span>
-                        @else 
-                        <span style="border:1px solid #000;  font-family: DejaVu Sans, sans-serif;color:#fff">✔</span>
-                        @endif
-                        {{ $row->jabatan }} </li>
+                    @if(in_array($row->id, $data->disposisis->pluck('pejabat_id')->toArray()))
+                        <li>
+                            <span style="border:1px solid #000;  font-family: DejaVu Sans, sans-serif;">✔</span>
+
+                            {{ $row->nama }} - {{ $row->jabatan }}
+                        </li>
+                    @endif
                 @endforeach
             </ul>
         </td>

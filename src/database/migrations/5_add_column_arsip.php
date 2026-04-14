@@ -14,7 +14,9 @@ return new class extends Migration
     public function up()
     {
         Schema::table('arsips', function (Blueprint $table) {
-            $table->foreignUUId('kadis_id')->nullable();
+            if (!Schema::hasColumn('arsips', 'kadis_id')) {
+                $table->foreignUUId('kadis_id')->nullable();
+            }
         });
 
     }
