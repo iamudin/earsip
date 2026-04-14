@@ -314,6 +314,7 @@ class SuratMasukController extends Controller  implements HasMiddleware
                 ]);
                 $arsip->disposisis()->updateOrCreate([
                     'arsip_id' => $arsip->id,
+                    'user_id' => $row->user_id,
                     'pejabat_id' => $row->id,
                 ]);
                 WaSender::dispatch([
