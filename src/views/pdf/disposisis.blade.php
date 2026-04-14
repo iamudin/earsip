@@ -1,5 +1,5 @@
 <center>
-    <img src="{{public_path('logokab.png')}}" style="float:left;height:70px;margin-right:10px;">
+    <img src="{{media_path(get_option('logo_organisasi'))}}" style="float:left;height:70px;margin-right:10px;">
 
     <h3 style="margin-top:10;padding-top:0;margin-bottom:30px">
         PEMERINTAH KABUPATEN BENGKALIS<br>
