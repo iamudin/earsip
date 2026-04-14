@@ -3,6 +3,7 @@ namespace Leazycms\EArsip\Controllers;
 use App\Http\Controllers\Controller;
 use Barryvdh\DomPDF\Facade\Pdf as PDF;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\Artisan;
@@ -18,11 +19,11 @@ class AdminController extends Controller  implements HasMiddleware
             new Middleware('auth'),
         ];
     }
-    function pengaturan(){
+    function pengaturan(Request $request){
         admin_only();
 
-        if(request()->isMethod('PUT')){
-            $data = request()->validate([
+        if($request->isMethod('PUT')){
+            $data = $request->validate([
                 'url' => 'required|url',
                 'logo' => 'required|url',
                 'api_url' => 'required|url',
