@@ -3,7 +3,7 @@
     
     <h3 style="margin-top:10;padding-top:0;margin-bottom:30px">
         PEMERINTAH KABUPATEN BENGKALIS<br>
-        DINAS PERKEBUNAN<br>
+        {{ str(get_option('nama_organisasi'))->upper() }}<br>
     </h3>
     <hr style="border-top: 1px solid #000;margin:0;padding:0">
     <hr style="border-bottom: 2px solid #000;margin:0;padding:0">
@@ -116,7 +116,7 @@
         </td>
         <td style="vertical-align: bottom;border-left:none !important">
             <div class="ttd" style="margin-top:150px;padding:20px">
-                KEPALA DINAS PERKEBUNAN<br>KABUPATEN BENGKALIS<br>
+                KEPALA {{ str(get_option('nama_organisasi'))->upper() }}<br>KABUPATEN {{ str(get_option('kabupaten'))->upper() }}<br>
                 <br>
                 <br>
                 dto
