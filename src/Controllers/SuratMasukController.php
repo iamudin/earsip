@@ -303,8 +303,8 @@ class SuratMasukController extends Controller  implements HasMiddleware
                 'harapan' => $request->harapan,
                 'disposisi_pada' => now(),
             ]);
-            $pejabat = Pejabat::whereIn('id', $request->pejabat_id)->get();
-            foreach ($pejabat as $row) {
+            $pejabatnya = Pejabat::whereIn('id', $request->pejabat_id)->get();
+            foreach ($pejabatnya as $row) {
 
                 $notif = $arsip->addNotification([
                     'to_user' => $row->user_id,
@@ -314,7 +314,7 @@ class SuratMasukController extends Controller  implements HasMiddleware
                 ]);
                 $arsip->disposisis()->updateOrCreate([
                     'arsip_id' => $arsip->id,
-                    'pejabat_id' => $row,
+                    'pejabat_id' => $row->id,
                 ]);
                 WaSender::dispatch([
                     'to' => $row->nohp,
