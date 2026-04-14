@@ -26,7 +26,7 @@
     placeholder="628xxxxxxxxxx"
     pattern="62[0-9]{9,12}"
     minlength="11"
-    maxlength="12"
+    maxlength="13"
     value="{{ $data->nohp ?? null }}"
     required
     onkeyup="this.value = this.value.replace(/[^0-9]/g, '')"
