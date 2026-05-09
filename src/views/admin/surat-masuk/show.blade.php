@@ -268,7 +268,27 @@
   <div class="col-lg-12">
   <div class="alert alert-warning" style="border:4px dashed brown">
     <i class="fa fa-reply pull-right"></i>
-  <p><strong>Harap :</strong><br>
+    @if($data->disposisis->count() == 1 && $data->disposisis->first()->pejabat_id == earsip_user()->pejabat->id)
+    <p class="card-text mb-1 font-weight-bold">Surat ini hanya diteruskan kepada anda</p>
+    @elseif($data->disposisis->count() > 0)
+    @php
+        $others = $data->disposisis->where('pejabat_id', '<>', earsip_user()->pejabat->id);
+    @endphp
+    @if($others->count())
+    <p class="card-text mb-1">Surat ini juga diteruskan kepada :
+    <ul style="padding:10px">
+    @foreach($others as $row)
+    <li>
+    <strong>{{ $row->pejabat->nama }} - {{ $row->pejabat->jabatan }}</strong>
+    </li>
+    @endforeach
+    </ul>
+    </p>
+    @endif
+    @endif
+  <p>
+    
+  <strong>Harap :</strong><br>
    @foreach($data->harapan as $row)
    - {{ $row }}<br>
    @endforeach
