@@ -4,7 +4,7 @@
     <h3 style="margin-top:10;padding-top:0;margin-bottom:30px">
         PEMERINTAH KABUPATEN BENGKALIS<br>
         <span style="font-size:16px;">
-        {{ str(get_option('nama_organisasi'))->upper() }}<br>KABUPATEN {{ str(get_option('kabupaten'))->upper() }}
+        {{ str(get_option('nama_organisasi'))->upper() }}
 
         </span>
     </h3>
@@ -118,7 +118,7 @@
       
         </td>
         <td style="vertical-align: bottom;border-left:none !important">
-            <div class="ttd" style="margin-top:150px;padding:20px">
+            <div class="ttd" style="margin-top:150px;padding:20px;font-size:16px;">
                 KEPALA {{ str(get_option('nama_organisasi'))->upper() }}<br>KABUPATEN {{ str(get_option('kabupaten'))->upper() }}<br>
                 <br>
                 <br>
