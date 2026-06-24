@@ -11,7 +11,6 @@ class EarsipServiceProvider extends ServiceProvider
     protected function registerRoutes()
     {
        
-        if(get_option('sub_app_enabled') && get_option('sub_app_enabled') === 'Y'){
         Route::middleware(['web','admin.earsip'])
         ->group(function () {
             $this->loadRoutesFrom(__DIR__.'/routes/admin.php');
@@ -22,7 +21,6 @@ class EarsipServiceProvider extends ServiceProvider
         ->group(function () {
             $this->loadRoutesFrom(__DIR__.'/routes/web.php');
         });
-    }
     }
     protected function registerResources()
     {
